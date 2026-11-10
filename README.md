@@ -1,8 +1,8 @@
-# Cozy Room Portfolio
+# Arseni Alioshyn — 3D Portfolio
 
 A cozy 3D room built with React Three Fiber. Walk around the desk, click the monitor, and the camera flies into a small "OS" that holds my projects.
 
-**▶ Live:** https://gars0128.github.io/safeplace/
+**▶ Live:** https://arseni-portfolio-3d.vercel.app
 
 Things to try: hover the monitor, click the lamp, the PC, the cat; hover the pegboard; type `help` in the terminal.
 
