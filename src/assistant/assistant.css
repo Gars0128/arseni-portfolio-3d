@@ -1,35 +1,113 @@
+/* Alfred — cyberpunk HUD terminal. Two neons only: cyan = normal/active, magenta = listening/errors. */
 .alfred {
-  position: fixed; right: 16px; bottom: 70px; z-index: 6; width: min(380px, calc(100vw - 32px)); height: min(520px, calc(100vh - 110px));
-  display: flex; flex-direction: column; border-radius: 16px; overflow: hidden;
-  background: #120e1ce6; border: 1px solid #ffffff1f; backdrop-filter: blur(14px); box-shadow: 0 24px 60px #0008, 0 0 40px #39d5ff22;
-  font: 14px/1.5 -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; color: #f1ecf7;
-  animation: alfred-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --bg: #0a0a0c;
+  --line: #00f0ff33;
+  --cyan: #00f0ff;
+  --pink: #ff2a6d;
+  --text: #d9f9ff;
+  --dim: #7fa6ad;
+  --cut: 14px;
+  position: fixed; right: 16px; bottom: 70px; z-index: 6;
+  width: min(390px, calc(100vw - 32px)); height: min(530px, calc(100vh - 110px));
+  display: flex; flex-direction: column; overflow: hidden;
+  background: linear-gradient(180deg, #00f0ff08, transparent 30%), var(--bg);
+  color: var(--text); font: 13px/1.55 'JetBrains Mono', 'Cascadia Code', 'Consolas', ui-monospace, monospace;
+  /* chamfered corners instead of rounded ones */
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+  border: 1px solid var(--line);
+  box-shadow: inset 0 0 0 1px #00f0ff14, 0 0 40px #00f0ff1f;
+  animation: alfred-boot 0.42s steps(6, end);
 }
-@keyframes alfred-in { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
-@media (prefers-reduced-motion: reduce) { .alfred { animation: none; } }
-.alfred header { flex: none; display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid #ffffff14; }
-.alfred header div { flex: 1; display: grid; }
-.alfred header small { opacity: 0.6; font-size: 12px; }
-.alfred header button { background: #ffffff10; border: 0; color: inherit; border-radius: 8px; width: 32px; height: 32px; cursor: pointer; font-size: 15px; }
-.alfred button:focus-visible, .alfred input:focus-visible { outline: 2px solid #39d5ff; outline-offset: 2px; }
-.alfred-dot { width: 10px; height: 10px; border-radius: 50%; background: #39d5ff; box-shadow: 0 0 10px #39d5ff; }
-.alfred-dot.listening { background: #ff4d6d; box-shadow: 0 0 12px #ff4d6d; animation: alfred-pulse 0.9s infinite; }
-.alfred-dot.speaking, .alfred-dot.thinking { animation: alfred-pulse 0.6s infinite; }
-@keyframes alfred-pulse { 50% { opacity: 0.35; } }
-.alfred-log { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 14px; display: grid; gap: 10px; align-content: start; }
-.msg { max-width: 92%; padding: 9px 12px; border-radius: 12px; }
+/* scanlines + film noise over everything, never blocking clicks */
+.alfred::before, .alfred::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.alfred::before { background: repeating-linear-gradient(0deg, #ffffff06 0 1px, transparent 1px 3px); }
+.alfred::after {
+  opacity: 0.07; mix-blend-mode: screen;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: alfred-noise 0.5s steps(4) infinite;
+}
+@keyframes alfred-boot { 0% { opacity: 0; transform: translateX(8px) skewX(-6deg); filter: hue-rotate(90deg); } 60% { opacity: 1; transform: translateX(-3px); } }
+@keyframes alfred-noise { 0% { background-position: 0 0; } 25% { background-position: -40px 20px; } 50% { background-position: 30px -50px; } 75% { background-position: -20px -10px; } }
+
+/* HUD corner brackets */
+.hud-corner { position: absolute; width: 12px; height: 12px; border: 2px solid var(--cyan); z-index: 4; pointer-events: none; opacity: 0.8; }
+.hud-corner.tl { top: 6px; left: 18px; border-right: 0; border-bottom: 0; }
+.hud-corner.br { bottom: 6px; right: 18px; border-left: 0; border-top: 0; }
+
+/* header */
+.alfred header { flex: none; display: flex; align-items: center; gap: 10px; padding: 14px 14px 10px 18px; border-bottom: 1px dashed var(--line); }
+.alfred header .id { flex: 1; display: grid; gap: 2px; min-width: 0; }
+.alfred-title { position: relative; font-weight: 800; font-size: 18px; letter-spacing: 4px; color: var(--cyan); text-shadow: 0 0 8px #00f0ff88; }
+.alfred-title::before, .alfred-title::after { content: attr(data-text); position: absolute; inset: 0; }
+.alfred-title::before { color: var(--pink); clip-path: inset(0 0 60% 0); animation: glitch-a 3.2s steps(1) infinite; }
+.alfred-title::after { color: #f6ff00; clip-path: inset(55% 0 0 0); animation: glitch-b 3.2s steps(1) infinite; }
+@keyframes glitch-a { 0%, 92%, 100% { transform: none; opacity: 0; } 93% { transform: translate(-3px, -1px); opacity: 0.9; } 95% { transform: translate(2px, 0); opacity: 0.9; } 97% { transform: translate(-1px, 1px); opacity: 0.7; } }
+@keyframes glitch-b { 0%, 93%, 100% { transform: none; opacity: 0; } 94% { transform: translate(3px, 1px); opacity: 0.8; } 96% { transform: translate(-2px, 0); opacity: 0.8; } }
+.alfred-sys { font-size: 10px; letter-spacing: 1.5px; color: var(--dim); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.alfred-status { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); }
+.alfred-status.listening { color: var(--pink); }
+.alfred-dot { width: 8px; height: 8px; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); flex: none; }
+.alfred-dot.listening { background: var(--pink); box-shadow: 0 0 12px var(--pink); animation: blink 0.5s steps(1) infinite; }
+.alfred-dot.speaking, .alfred-dot.thinking { animation: blink 0.25s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0.2; } }
+.alfred header button {
+  width: 32px; height: 30px; cursor: pointer; font: inherit; font-size: 13px; color: var(--cyan);
+  background: transparent; border: 1px solid var(--line);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+}
+.alfred header button:hover, .alfred header button[aria-pressed='true'] { background: #00f0ff1a; box-shadow: inset 0 0 8px #00f0ff55; }
+.alfred button:focus-visible, .alfred input:focus-visible { outline: 1px solid var(--cyan); outline-offset: 2px; }
+
+/* log */
+.alfred-log { position: relative; flex: 1; min-height: 0; overflow-y: auto; padding: 14px 16px; display: grid; gap: 12px; align-content: start; scrollbar-width: thin; scrollbar-color: #00f0ff55 transparent; }
+.msg { max-width: 94%; padding: 9px 12px; position: relative; }
 .msg p { margin: 0; white-space: pre-wrap; }
-.msg.from-alfred { background: #ffffff0f; border-top-left-radius: 4px; }
-.msg.from-you { justify-self: end; background: #39d5ff26; border-top-right-radius: 4px; }
-.refs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.refs button { font: inherit; font-size: 12px; cursor: pointer; color: #39d5ff; background: #39d5ff14; border: 1px solid #39d5ff55; border-radius: 999px; padding: 3px 10px; }
-.refs button:hover { background: #39d5ff2e; }
-.alfred-chips { display: flex; gap: 6px; overflow-x: auto; padding: 8px 14px 2px; scrollbar-width: none; }
-.alfred-chips button { flex: none; font: inherit; font-size: 12px; cursor: pointer; color: inherit; background: #ffffff10; border: 1px solid #ffffff1f; border-radius: 999px; padding: 4px 10px; }
-.alfred-chips button:hover { background: #ffffff1f; }
-.alfred-error { margin: 6px 14px 0; font-size: 12px; color: #ff9aa8; }
-.alfred form { display: flex; gap: 6px; padding: 10px 14px 14px; }
-.alfred input { flex: 1; min-width: 0; font: inherit; color: inherit; background: #ffffff10; border: 1px solid #ffffff22; border-radius: 10px; padding: 8px 10px; }
-.alfred form button { width: 38px; border: 0; border-radius: 10px; cursor: pointer; background: #39d5ff; color: #0b0a12; font-size: 15px; }
-.alfred form .mic { background: #ffffff14; color: inherit; }
-.alfred form .mic.on { background: #ff4d6d; color: #fff; animation: alfred-pulse 0.9s infinite; }
+.msg.from-alfred { background: #00f0ff0a; border-left: 2px solid var(--cyan); }
+.msg.from-alfred::before { content: 'ALFRED://'; display: block; font-size: 10px; letter-spacing: 2px; color: var(--cyan); opacity: 0.75; margin-bottom: 4px; }
+.msg.from-you { justify-self: end; background: #ff2a6d12; border-right: 2px solid var(--pink); text-align: right; }
+.msg.from-you::before { content: '> YOU'; display: block; font-size: 10px; letter-spacing: 2px; color: var(--pink); opacity: 0.8; margin-bottom: 4px; }
+.msg.fresh { animation: msg-in 0.28s steps(4, end); }
+@keyframes msg-in { 0% { opacity: 0; transform: translateX(-10px); clip-path: inset(0 100% 0 0); } 50% { opacity: 1; transform: translateX(3px); } }
+.cursor { display: inline-block; width: 7px; height: 1em; background: var(--cyan); vertical-align: -2px; margin-left: 2px; animation: blink 0.6s steps(1) infinite; }
+.refs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.refs button {
+  font: inherit; font-size: 11px; letter-spacing: 0.5px; cursor: pointer; color: var(--cyan); background: transparent;
+  border: 1px solid #00f0ff66; padding: 4px 10px; text-align: left;
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+}
+.refs button:hover { background: var(--cyan); color: var(--bg); box-shadow: 0 0 14px #00f0ff88; }
+
+/* scan sweep + jolt on every new answer */
+.alfred-sweep { position: absolute; left: 0; right: 0; top: 0; height: 40px; z-index: 2; pointer-events: none; opacity: 0;
+  background: linear-gradient(180deg, transparent, #00f0ff22 45%, #00f0ff55 50%, transparent); animation: sweep 0.5s steps(8) 1; }
+@keyframes sweep { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(460px); } }
+.alfred.jolt { animation: jolt 0.18s steps(3) 1; }
+@keyframes jolt { 33% { transform: translateX(-2px); filter: hue-rotate(25deg) saturate(1.6); } 66% { transform: translateX(2px); } }
+
+/* chips + input */
+.alfred-chips { flex: none; display: flex; gap: 6px; overflow-x: auto; padding: 8px 16px 2px; scrollbar-width: none; border-top: 1px dashed var(--line); }
+.alfred-chips button {
+  flex: none; font: inherit; font-size: 11px; cursor: pointer; color: var(--dim); background: transparent;
+  border: 1px solid #ffffff1f; padding: 4px 9px; text-transform: uppercase; letter-spacing: 1px;
+}
+.alfred-chips button:hover { color: var(--cyan); border-color: var(--cyan); text-shadow: 0 0 6px #00f0ff99; }
+.alfred-error { flex: none; margin: 6px 16px 0; font-size: 11px; color: var(--pink); letter-spacing: 1px; text-transform: uppercase; }
+.alfred-error::before { content: '!! ERR // '; }
+.alfred form { flex: none; display: flex; gap: 6px; padding: 10px 16px 16px; }
+.alfred input {
+  flex: 1; min-width: 0; font: inherit; color: var(--text); background: #000; border: 1px solid var(--line); padding: 8px 10px; caret-color: var(--cyan);
+}
+.alfred input::placeholder { color: #5d7c82; }
+.alfred input:focus { border-color: var(--cyan); box-shadow: 0 0 12px #00f0ff33; outline: none; }
+.alfred form button {
+  width: 40px; border: 1px solid var(--cyan); cursor: pointer; background: #00f0ff1a; color: var(--cyan); font: inherit; font-size: 14px;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+.alfred form button:hover { background: var(--cyan); color: var(--bg); box-shadow: 0 0 16px #00f0ff99; }
+.alfred form .mic { border-color: #ffffff33; background: transparent; color: var(--dim); }
+.alfred form .mic.on { border-color: var(--pink); background: var(--pink); color: #000; animation: blink 0.5s steps(1) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .alfred, .alfred::after, .alfred-title::before, .alfred-title::after, .msg.fresh, .alfred-sweep, .alfred.jolt, .cursor, .alfred-dot, .alfred form .mic.on { animation: none !important; }
+  .alfred-title::before, .alfred-title::after { display: none; }
+}
