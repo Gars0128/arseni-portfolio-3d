@@ -6,17 +6,28 @@ import { Box, Interactive } from '../util'
 /** Glass-front tower on the floor: spinning fans + slowly cycling RGB. */
 export function PC() {
   const fans = useRef<THREE.Group[]>([])
-  const [rgb] = useState(() => new THREE.MeshStandardMaterial({ color: '#111', emissive: '#ff00aa', emissiveIntensity: 3 }))
+  const [rgb] = useState(() => new THREE.MeshStandardMaterial({ color: '#111', emissive: '#2bff7a', emissiveIntensity: 3 }))
   const boost = useRef(1)
 
   useFrame(({ clock }, dt) => {
     boost.current = THREE.MathUtils.lerp(boost.current, 1, dt)
     fans.current.forEach((f) => (f.rotation.z -= dt * 9 * boost.current))
-    rgb.emissive.setHSL((clock.elapsedTime * 0.05) % 1, 0.8, 0.5)
+    // green like the real build, gently breathing
+    rgb.emissiveIntensity = 2.4 + Math.sin(clock.elapsedTime * 1.2) * 0.8
   })
 
   return (
-    <Interactive label="pc" position={[-0.88, 0.25, -1.62]} onSelect={() => (boost.current = 5)}>
+    <Interactive label="pc" position={[-0.22, 0.26, -1.66]} onSelect={() => (boost.current = 5)}>
+      {/* white gamepad resting on top */}
+      <group position={[0.02, 0.27, 0.05]} rotation-y={0.4}>
+        <Box size={[0.15, 0.035, 0.08]} radius={0.016} color="#f2f0ec" roughness={0.4} />
+        {[-0.04, 0.04].map((dx) => (
+          <mesh key={dx} position={[dx, 0.022, 0.0]}>
+            <cylinderGeometry args={[0.009, 0.009, 0.012, 10]} />
+            <meshStandardMaterial color="#2a2a2a" />
+          </mesh>
+        ))}
+      </group>
       <Box size={[0.24, 0.5, 0.02]} position-z={-0.23} color="#161616" />
       <Box size={[0.02, 0.5, 0.46]} position-x={0.11} color="#161616" />
       <Box size={[0.02, 0.5, 0.46]} position-x={-0.11} color="#161616" />

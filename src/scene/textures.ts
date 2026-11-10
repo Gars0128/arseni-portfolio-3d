@@ -20,77 +20,130 @@ function canvasTex(key: string, w: number, h: number, draw: (c: CanvasRenderingC
 }
 
 /** Long-grain wood; horizontal streaks with slight waviness. */
-export const woodTexture = (base = '#9a6a45', grain = '#6e4529') =>
-  canvasTex(`wood${base}${grain}`, 512, 512, (c) => {
+export const woodTexture = (base = '#c9a46a', grain = '#9c7642') =>
+  canvasTex(`wood${base}${grain}`, 1024, 512, (c) => {
     const r = rand(13)
     c.fillStyle = base
-    c.fillRect(0, 0, 512, 512)
-    for (let i = 0; i < 140; i++) {
+    c.fillRect(0, 0, 1024, 512)
+    for (let i = 0; i < 220; i++) {
       const y = r() * 512
       c.strokeStyle = grain
-      c.globalAlpha = 0.08 + r() * 0.18
-      c.lineWidth = 0.6 + r() * 2.2
+      c.globalAlpha = 0.05 + r() * 0.14
+      c.lineWidth = 0.6 + r() * 2.4
       c.beginPath()
-      for (let x = 0; x <= 512; x += 16) c.lineTo(x, y + Math.sin(x / (40 + r() * 60) + i) * (2 + r() * 3))
+      for (let x = 0; x <= 1024; x += 16) c.lineTo(x, y + Math.sin(x / (60 + r() * 90) + i) * (2 + r() * 4))
       c.stroke()
     }
     c.globalAlpha = 1
   })
 
-/** Floor planks: wood strips with darker seams. */
-export const plankTexture = () =>
+/** Narrow multi-tone laminate strips, like the real floor. */
+export const laminateTexture = () =>
   canvasTex(
-    'planks',
+    'laminate',
     512,
     512,
     (c) => {
       const r = rand(31)
-      const shades = ['#6e4c35', '#734f37', '#694832', '#765239']
-      for (let row = 0; row < 8; row++) {
-        let x = -r() * 200
-        while (x < 512) {
-          const len = 160 + r() * 200
+      const shades = ['#5a3a24', '#7a5233', '#4a2f1d', '#8a6040', '#6a4529', '#3e2716', '#9a7048']
+      let x = 0
+      while (x < 512) {
+        const w = 6 + r() * 14
+        let y = -r() * 300
+        while (y < 512) {
+          const len = 120 + r() * 260
           c.fillStyle = shades[Math.floor(r() * shades.length)]
-          c.fillRect(x, row * 64, len, 64)
-          c.fillStyle = '#00000018'
-          for (let g = 0; g < 6; g++) c.fillRect(x, row * 64 + r() * 64, len, 1 + r())
-          c.fillStyle = '#2a1a10'
-          c.fillRect(x, row * 64, 2, 64)
-          x += len
+          c.fillRect(x, y, w, len)
+          c.fillStyle = '#00000022'
+          c.fillRect(x, y, w, 1)
+          y += len
         }
-        c.fillStyle = '#2a1a10'
-        c.fillRect(0, row * 64, 512, 2)
+        c.fillStyle = '#00000030'
+        c.fillRect(x, 0, 1, 512)
+        x += w
+      }
+      for (let i = 0; i < 1500; i++) {
+        c.fillStyle = r() > 0.5 ? '#ffffff08' : '#00000010'
+        c.fillRect(r() * 512, r() * 512, 1, 6 + r() * 20)
       }
     },
-    [5, 5],
+    [4, 4],
   )
 
-/** Subtle plaster noise so walls don't look like flat CG. */
+/** Warm off-white plaster with very soft mottling. */
 export const plasterTexture = () =>
   canvasTex(
     'plaster',
-    256,
-    256,
+    512,
+    512,
     (c) => {
       const r = rand(5)
-      c.fillStyle = '#d98a5c'
-      c.fillRect(0, 0, 256, 256)
-      for (let i = 0; i < 2500; i++) {
-        c.fillStyle = r() > 0.5 ? '#ffffff0d' : '#0000000d'
-        const s = 1 + r() * 3
-        c.fillRect(r() * 256, r() * 256, s, s)
+      c.fillStyle = '#ece3d4'
+      c.fillRect(0, 0, 512, 512)
+      for (let i = 0; i < 60; i++) {
+        const g = c.createRadialGradient(r() * 512, r() * 512, 0, r() * 512, r() * 512, 40 + r() * 90)
+        g.addColorStop(0, r() > 0.5 ? '#ffffff06' : '#a0907807')
+        g.addColorStop(1, '#00000000')
+        c.fillStyle = g
+        c.fillRect(0, 0, 512, 512)
+      }
+      for (let i = 0; i < 4000; i++) {
+        c.fillStyle = r() > 0.5 ? '#ffffff0a' : '#0000000a'
+        c.fillRect(r() * 512, r() * 512, 1 + r() * 2, 1 + r() * 2)
       }
     },
-    [6, 4],
+    [4, 3],
   )
 
-/** Kilim-style rug (own pattern): terracotta field, cream diamonds, woven noise, fringe on the short ends. */
+/** Desk mat: glossy black/grey "goo bubbles" on white with ink outlines and highlights. */
+export const deskmatTexture = () =>
+  canvasTex('deskmat', 1536, 560, (c) => {
+    const r = rand(9)
+    const W = 1536, H = 560
+    c.fillStyle = '#ecebea'
+    c.fillRect(0, 0, W, H)
+    const blobs = Array.from({ length: 38 }, () => ({
+      x: r() * W, y: r() * H, rad: 30 + r() * 90, col: ['#1d1d1f', '#5b5b60', '#9a9aa0', '#2c2c30'][Math.floor(r() * 4)],
+    }))
+    for (const b of blobs) {
+      c.fillStyle = '#111'
+      c.beginPath()
+      c.arc(b.x, b.y, b.rad + 5, 0, Math.PI * 2)
+      c.fill()
+    }
+    for (const b of blobs) {
+      const g = c.createRadialGradient(b.x - b.rad * 0.3, b.y - b.rad * 0.3, b.rad * 0.1, b.x, b.y, b.rad)
+      g.addColorStop(0, b.col === '#9a9aa0' ? '#c4c4ca' : '#6a6a70')
+      g.addColorStop(1, b.col)
+      c.fillStyle = g
+      c.beginPath()
+      c.arc(b.x, b.y, b.rad, 0, Math.PI * 2)
+      c.fill()
+    }
+    for (const b of blobs) {
+      c.strokeStyle = '#ffffffcc'
+      c.lineWidth = Math.max(3, b.rad * 0.08)
+      c.lineCap = 'round'
+      c.beginPath()
+      c.arc(b.x, b.y, b.rad * 0.7, Math.PI * 1.1, Math.PI * 1.45)
+      c.stroke()
+      c.fillStyle = '#ffffffcc'
+      c.beginPath()
+      c.arc(b.x - b.rad * 0.32, b.y - b.rad * 0.62, Math.max(2, b.rad * 0.06), 0, Math.PI * 2)
+      c.fill()
+    }
+    // stitched edge
+    c.strokeStyle = '#222'
+    c.lineWidth = 10
+    c.strokeRect(5, 5, W - 10, H - 10)
+  })
+
+/** Soft woollen rug (own pattern): muted oat/grey with a thin terracotta border and fringe. */
 export const rugTexture = () =>
   canvasTex('rug', 1024, 692, (c) => {
     const r = rand(77)
-    const W = 1024, H = 692, F = 34 // fringe length
-    // fringe
-    c.strokeStyle = '#e9dcc4'
+    const W = 1024, H = 692, F = 30
+    c.strokeStyle = '#e4dccd'
     c.lineWidth = 2
     for (let y = 14; y < H - 14; y += 7)
       for (const [x0, x1] of [[2 + r() * 8, F], [W - F, W - 2 - r() * 8]]) {
@@ -100,37 +153,25 @@ export const rugTexture = () =>
         c.stroke()
       }
     const x = F, w = W - 2 * F
-    const bands: [string, number][] = [['#2f2520', 0], ['#e9d9bd', 18], ['#b5522f', 34], ['#e9d9bd', 70], ['#3f5a45', 80], ['#c96a3f', 96]]
+    const bands: [string, number][] = [['#d8cdb8', 0], ['#b8674a', 26], ['#d8cdb8', 36], ['#8c8a84', 70], ['#cfc3ad', 76]]
     for (const [col, inset] of bands) {
       c.fillStyle = col
       c.fillRect(x + inset, inset, w - inset * 2, H - inset * 2)
     }
-    // zigzag in the border
-    c.strokeStyle = '#2f2520'
-    c.lineWidth = 6
-    for (const [y0, dir] of [[52, 1], [H - 52, -1]] as const) {
+    c.strokeStyle = '#8c8a84'
+    c.lineWidth = 3
+    for (let i = 0; i < 7; i++) {
+      const cx = x + w / 2 + (i - 3) * 120
       c.beginPath()
-      for (let i = 0, px = x + 34; px <= x + w - 34; i++, px += 24) c.lineTo(px, y0 + (i % 2 ? 10 : -10) * dir)
+      c.moveTo(cx, H / 2 - 70)
+      c.lineTo(cx + 45, H / 2)
+      c.lineTo(cx, H / 2 + 70)
+      c.lineTo(cx - 45, H / 2)
+      c.closePath()
       c.stroke()
     }
-    // central diamonds
-    const cy = H / 2
-    for (let i = 0; i < 5; i++) {
-      const cx = x + w / 2 + (i - 2) * 175
-      for (const [s, col] of [[118, '#e9d9bd'], [92, '#2f2520'], [70, '#d9a24a'], [44, '#3f5a45'], [18, '#e9d9bd']] as const) {
-        const sx = s * (i === 2 ? 1 : 0.72)
-        c.fillStyle = col
-        c.beginPath()
-        c.moveTo(cx, cy - sx * 1.4)
-        c.lineTo(cx + sx, cy)
-        c.lineTo(cx, cy + sx * 1.4)
-        c.lineTo(cx - sx, cy)
-        c.fill()
-      }
-    }
-    // woven texture
-    for (let i = 0; i < 9000; i++) {
-      c.fillStyle = r() > 0.5 ? '#ffffff12' : '#00000016'
-      c.fillRect(x + r() * w, r() * H, 3, 1)
+    for (let i = 0; i < 14000; i++) {
+      c.fillStyle = r() > 0.5 ? '#ffffff14' : '#00000014'
+      c.fillRect(x + r() * w, r() * H, 2, 2)
     }
   })

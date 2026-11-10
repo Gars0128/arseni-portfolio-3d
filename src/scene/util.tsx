@@ -1,7 +1,8 @@
 import { RoundedBox, useCursor } from '@react-three/drei'
 import type { ThreeElements } from '@react-three/fiber'
 import { Select } from '@react-three/postprocessing'
-import { useMemo, useState, type ComponentProps, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ComponentProps, type ReactNode } from 'react'
+import { useStore } from '../store'
 import * as THREE from 'three'
 
 export const rand = (seed: number) => () => {
@@ -84,4 +85,11 @@ export function Interactive({ disabled, onSelect, children, label, ...props }: I
       </group>
     </Select>
   )
+}
+
+/** Rendered after everything above it in a Suspense boundary resolves: hides the boot screen. */
+export function Loaded() {
+  const setLoaded = useStore((s) => s.setLoaded)
+  useEffect(setLoaded, [setLoaded])
+  return null
 }

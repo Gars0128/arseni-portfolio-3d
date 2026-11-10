@@ -10,20 +10,19 @@ export function Post() {
         blendFunction={BlendFunction.MULTIPLY}
         samples={16}
         rings={4}
-        radius={0.08}
-        intensity={22}
-        luminanceInfluence={0.5}
+        radius={0.1}
+        intensity={18}
+        luminanceInfluence={0.6}
         worldDistanceThreshold={1}
         worldDistanceFalloff={0.3}
         worldProximityThreshold={0.4}
-        worldProximityFalloff={0.2}
-        color={undefined}
+        worldProximityFalloff={0.25}
       />
-      <Outline blur edgeStrength={4} visibleEdgeColor={0xffe0b0} hiddenEdgeColor={0xffe0b0} />
-      <Bloom mipmapBlur luminanceThreshold={1} luminanceSmoothing={0.3} intensity={0.7} />
-      <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
+      <Outline blur edgeStrength={3} visibleEdgeColor={0xfff0d8} hiddenEdgeColor={0xfff0d8} />
+      <Bloom mipmapBlur luminanceThreshold={0.95} luminanceSmoothing={0.3} intensity={0.8} />
+      <ToneMapping mode={ToneMappingMode.AGX} />
       <SMAA />
-      <Vignette offset={0.35} darkness={0.5} />
+      <Vignette offset={0.35} darkness={0.45} />
     </EffectComposer>
   )
 }

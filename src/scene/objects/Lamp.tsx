@@ -1,95 +1,62 @@
-import { useFrame } from '@react-three/fiber'
-import { useMemo, useRef, useState } from 'react'
+import { useState } from 'react'
 import * as THREE from 'three'
 import { useStore } from '../../store'
-import { Interactive, rand } from '../util'
+import { Interactive } from '../util'
 
-const HEAD = new THREE.Vector3(1.0, 1.26, -1.62)
-const DUST = 90
+const CENTER = new THREE.Vector3(0.98, 1.0, -1.9)
+const R = 0.22
 
-/** Desk lamp: click toggles the spotlight; dust motes drift in the beam. */
+/** Ring lamp behind the monitor: click toggles it. Washes the wall and casts the soft desk shadows. */
 export function Lamp() {
   const on = useStore((s) => s.lampOn)
   const toggle = useStore((s) => s.toggleLamp)
   const [target] = useState(() => {
     const o = new THREE.Object3D()
-    o.position.set(0.62, 0.76, -1.38)
+    o.position.set(0.4, 0.76, -1.35)
     return o
   })
 
   return (
     <>
-      <Interactive label="lamp" onSelect={toggle}>
-        <mesh position={[1.22, 0.775, -1.8]}>
-          <cylinderGeometry args={[0.07, 0.08, 0.025, 16]} />
-          <meshStandardMaterial color="#1c1c1c" />
-        </mesh>
-        <mesh position={[1.22, 1.02, -1.8]}>
-          <cylinderGeometry args={[0.008, 0.008, 0.5, 6]} />
-          <meshStandardMaterial color="#1c1c1c" />
-        </mesh>
-        <mesh position={[1.11, 1.27, -1.71]} rotation={[0.6, 0, 0.9]}>
-          <cylinderGeometry args={[0.008, 0.008, 0.3, 6]} />
-          <meshStandardMaterial color="#1c1c1c" />
-        </mesh>
-        <mesh position={HEAD} rotation={[0.35, 0, 0.5]} userData={{ noShadow: true }}>
-          <coneGeometry args={[0.075, 0.1, 16, 1, true]} />
-          <meshStandardMaterial color="#1c1c1c" side={2} />
-        </mesh>
-        <mesh position={[HEAD.x, HEAD.y - 0.03, HEAD.z]} userData={{ noShadow: true }}>
-          <sphereGeometry args={[0.03, 12, 8]} />
-          <meshStandardMaterial color="#fff" emissive="#ffc27a" emissiveIntensity={on ? 6 : 0} />
-        </mesh>
+      <Interactive label="ring lamp" onSelect={toggle}>
+        <group position={CENTER} rotation-y={-0.6}>
+          {/* dark housing + glowing inner strip */}
+          <mesh userData={{ noShadow: true }}>
+            <torusGeometry args={[R, 0.012, 12, 64]} />
+            <meshStandardMaterial color="#1c1c1e" roughness={0.4} metalness={0.4} />
+          </mesh>
+          <mesh userData={{ noShadow: true }}>
+            <torusGeometry args={[R - 0.012, 0.005, 8, 64]} />
+            <meshStandardMaterial color="#fff" emissive="#fff3e0" emissiveIntensity={on ? 2.2 : 0} toneMapped={false} />
+          </mesh>
+          <mesh position-y={-R - 0.015}>
+            <cylinderGeometry args={[0.008, 0.008, 0.03, 8]} />
+            <meshStandardMaterial color="#1c1c1e" />
+          </mesh>
+          <mesh position-y={-0.24 + 0.006}>
+            <cylinderGeometry args={[0.07, 0.075, 0.012, 24]} />
+            <meshStandardMaterial color="#1c1c1e" roughness={0.5} />
+          </mesh>
+        </group>
       </Interactive>
       <primitive object={target} />
+      {/* wall wash */}
+      <pointLight position={[CENTER.x - 0.05, CENTER.y, CENTER.z - 0.04]} intensity={on ? 0.9 : 0} distance={1.6} color="#fff0dc" decay={2} />
+      {/* soft key light onto the desk */}
       <spotLight
-        position={[HEAD.x, HEAD.y - 0.04, HEAD.z]}
+        position={[CENTER.x - 0.1, CENTER.y + 0.25, CENTER.z + 0.15]}
         target={target}
-        intensity={on ? 4 : 0}
-        color="#ffbf80"
-        angle={0.6}
-        penumbra={0.6}
+        intensity={on ? 3.2 : 0}
+        color="#ffe6c8"
+        angle={0.9}
+        penumbra={1}
         decay={2}
         distance={4}
         castShadow
         shadow-mapSize={[1024, 1024]}
-        shadow-bias={-0.0005}
+        shadow-bias={-0.0004}
+        shadow-radius={6}
       />
-      {on && <Dust />}
     </>
-  )
-}
-
-function Dust() {
-  const ref = useRef<THREE.Points>(null)
-  const { positions, speed } = useMemo(() => {
-    const r = rand(3)
-    const positions = new Float32Array(DUST * 3)
-    const speed = new Float32Array(DUST)
-    for (let i = 0; i < DUST; i++) {
-      positions.set([(r() - 0.5) * 0.3, r() * 0.45, (r() - 0.5) * 0.3], i * 3)
-      speed[i] = 0.01 + r() * 0.02
-    }
-    return { positions, speed }
-  }, [])
-
-  useFrame(({ clock }, dt) => {
-    const attr = ref.current!.geometry.attributes.position as THREE.BufferAttribute
-    for (let i = 0; i < DUST; i++) {
-      let y = attr.getY(i) - speed[i] * dt
-      if (y < 0) y = 0.45
-      attr.setY(i, y)
-      attr.setX(i, attr.getX(i) + Math.sin(clock.elapsedTime * 0.5 + i) * 0.0004)
-    }
-    attr.needsUpdate = true
-  })
-
-  return (
-    <points ref={ref} position={[0.8, 0.8, -1.5]}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-      </bufferGeometry>
-      <pointsMaterial color="#ffd9a0" size={0.006} transparent opacity={0.8} depthWrite={false} />
-    </points>
   )
 }

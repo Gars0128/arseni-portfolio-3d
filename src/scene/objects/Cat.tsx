@@ -19,7 +19,7 @@ export function Cat() {
   })
 
   return (
-    <Interactive label="cat" position={[-0.12, 0.76, -1.36]} rotation-y={0.5} onSelect={() => (hop.current = 1)}>
+    <Interactive label="cat" position={[-0.42, 1.02, -1.85]} rotation-y={0.6} onSelect={() => (hop.current = 1)}>
       <group ref={body}>
         <mesh position-y={0.04} scale={[1, 0.85, 1.2]}>
           <icosahedronGeometry args={[0.05, 1]} />

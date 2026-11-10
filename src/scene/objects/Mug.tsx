@@ -4,20 +4,21 @@ import { useMemo } from 'react'
 import * as THREE from 'three'
 
 /** Steam: a billboard plane with scrolling procedural noise, twisted in the vertex shader. */
-function Steam() {
+export function Steam({ position = [0, 0.2, 0], width = 0.07, height = 0.22, wobble = 0.012 }: { position?: [number, number, number]; width?: number; height?: number; wobble?: number }) {
   const material = useMemo(
     () =>
       new THREE.ShaderMaterial({
         transparent: true,
         depthWrite: false,
-        uniforms: { uTime: { value: 0 } },
+        uniforms: { uTime: { value: 0 }, uWobble: { value: wobble } },
         vertexShader: /* glsl */ `
           uniform float uTime;
+          uniform float uWobble;
           varying vec2 vUv;
           void main() {
             vUv = uv;
             vec3 p = position;
-            p.x += sin(uv.y * 6.0 - uTime * 1.5) * 0.012 * uv.y;
+            p.x += sin(uv.y * 6.0 - uTime * 1.5) * uWobble * uv.y;
             gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
           }`,
         fragmentShader: /* glsl */ `
@@ -38,13 +39,13 @@ function Steam() {
             gl_FragColor = vec4(vec3(1.0, 0.95, 0.9), n * edge * fade * 0.55);
           }`,
       }),
-    [],
+    [wobble],
   )
   useFrame((_, dt) => (material.uniforms.uTime.value += dt))
   return (
-    <Billboard position-y={0.2} lockY>
+    <Billboard position={position} lockY>
       <mesh material={material} userData={{ noShadow: true }}>
-        <planeGeometry args={[0.07, 0.22, 1, 16]} />
+        <planeGeometry args={[width, height, 1, 16]} />
       </mesh>
     </Billboard>
   )
@@ -52,7 +53,7 @@ function Steam() {
 
 export function Mug() {
   return (
-    <group position={[1.08, 0.76, -1.4]}>
+    <group position={[1.15, 0.76, -1.42]}>
       <mesh position-y={0.045}>
         <cylinderGeometry args={[0.038, 0.034, 0.09, 24]} />
         <meshStandardMaterial color="#b0603a" roughness={0.35} />

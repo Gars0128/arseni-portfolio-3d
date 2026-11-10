@@ -1,29 +1,47 @@
 import { CameraControls } from '@react-three/drei'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
-import { SCREEN } from './objects/Monitor'
+import type { PerspectiveCamera } from 'three'
 import { useStore } from '../store'
 
-const ROOM_POS = [-1.1, 1.6, 1.5] as const
-const ROOM_TARGET = [0.35, 1.1, -1.6] as const
-const BASE_AZIMUTH = Math.atan2(ROOM_POS[0] - ROOM_TARGET[0], ROOM_POS[2] - ROOM_TARGET[2])
+export type View = {
+  fov: number
+  pos: [number, number, number]
+  target: [number, number, number]
+  /** screen center; the camera stops `monitorDistance` in front of it (+z) */
+  screen: readonly [number, number, number]
+  monitorDistance: number
+  minDistance: number
+  maxDistance: number
+  azimuthRange: number
+  polar: [number, number]
+  parallax: number
+}
+
 const deg = Math.PI / 180
 
-export function CameraRig() {
+export function CameraRig({ view }: { view: View }) {
   const ref = useRef<CameraControls>(null)
   const mode = useStore((s) => s.mode)
+  const camera = useThree((s) => s.camera) as PerspectiveCamera
+  const baseAzimuth = Math.atan2(view.pos[0] - view.target[0], view.pos[2] - view.target[2])
+
+  useEffect(() => {
+    camera.fov = view.fov
+    camera.updateProjectionMatrix()
+  }, [camera, view.fov])
 
   useEffect(() => {
     const c = ref.current!
-    const [x, y, z] = SCREEN.position
-    if (mode === 'monitor') c.setLookAt(x, y, z + 0.56, x, y, z, true)
-    else c.setLookAt(...ROOM_POS, ...ROOM_TARGET, true)
-  }, [mode])
+    const [x, y, z] = view.screen
+    if (mode === 'monitor') c.setLookAt(x, y, z + view.monitorDistance, x, y, z, true)
+    else c.setLookAt(...view.pos, ...view.target, true)
+  }, [mode, view])
 
   // Idle parallax: drift the view slightly toward the mouse.
   useFrame(({ pointer }) => {
-    const k = mode === 'room' ? 1 : 0
-    ref.current?.setFocalOffset(pointer.x * 0.07 * k, pointer.y * 0.04 * k, 0, true)
+    const k = mode === 'room' ? view.parallax : 0
+    ref.current?.setFocalOffset(pointer.x * k, pointer.y * k * 0.6, 0, true)
   })
 
   return (
@@ -32,12 +50,12 @@ export function CameraRig() {
       makeDefault
       enabled={mode === 'room'}
       smoothTime={0.45}
-      minDistance={mode === 'room' ? 1.3 : 0.1}
-      maxDistance={3.6}
-      minAzimuthAngle={BASE_AZIMUTH - 35 * deg}
-      maxAzimuthAngle={BASE_AZIMUTH + 35 * deg}
-      minPolarAngle={60 * deg}
-      maxPolarAngle={95 * deg}
+      minDistance={mode === 'room' ? view.minDistance : 0.1}
+      maxDistance={view.maxDistance}
+      minAzimuthAngle={baseAzimuth - view.azimuthRange * deg}
+      maxAzimuthAngle={baseAzimuth + view.azimuthRange * deg}
+      minPolarAngle={view.polar[0] * deg}
+      maxPolarAngle={view.polar[1] * deg}
       truckSpeed={0}
     />
   )

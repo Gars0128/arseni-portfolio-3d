@@ -17,10 +17,10 @@ Interactive cozy 3D room (React Three Fiber). Clicking the main monitor flies th
 - `npm run build`: check + production build into `dist/`
 
 ## Where things are
-- `src/scene/Experience.tsx`: lights + object list. Positions are in meters; desk top at y=0.76, back wall z=-2, right wall x=1.6.
+- `src/scene/Experience.tsx`: lights + object list. The room is modelled on the owner's real room (photos). Meters; desk top y=0.76, back wall z=-2 with a window hole at x 2.25–3.05, right wall x=3.4.
 - `src/scene/CameraRig.tsx`: room ↔ monitor camera, limits, parallax.
 - `src/scene/objects/Monitor.tsx`: `SCREEN` constant drives both the camera target and the `<Html>` size.
-- Look = soft PCSS shadows from the lamp, Lightformer environment, SSAO + bloom + ACES tone mapping (`effects/Post.tsx`), procedural canvas textures (`textures.ts`). N8AO crashes on three r187, do not re-add it.
+- Look = ring-lamp spotlight with soft PCSS shadows, cool window light, Lightformer environment, SSAO + bloom + AgX tone mapping (`effects/Post.tsx`), procedural canvas textures (`textures.ts`). N8AO crashes on three r187, do not re-add it.
 - No WebGL → `src/lite/LitePage.tsx` (fallback only, no UI link).
 
 ## Deploy
