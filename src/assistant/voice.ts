@@ -1,5 +1,5 @@
-// Browser-native voice for Alfred: Web Speech API for listening, speechSynthesis for talking. Free, no downloads.
-// Firefox has no SpeechRecognition — the UI hides the mic there and Alfred stays text-only.
+// Browser-native voice for the desk assistant: Web Speech API for listening, speechSynthesis for talking. Free, no downloads.
+// Firefox has no SpeechRecognition — the UI hides the mic there and the assistant stays text-only.
 
 type Recognition = {
   lang: string
@@ -44,7 +44,7 @@ export function listen(): Promise<string> {
 
 export const stopListening = () => active?.abort()
 
-/** A calm English voice, preferring a British male one — Alfred is a butler, after all. */
+/** A light English voice with a raised pitch — the assistant is a small robot frog. */
 function pickVoice() {
   const voices = speechSynthesis.getVoices().filter((v) => v.lang.startsWith('en'))
   return (
@@ -62,8 +62,8 @@ export function speak(text: string, onStart: () => void, onEnd: () => void) {
   const v = pickVoice()
   if (v) u.voice = v
   u.lang = v?.lang ?? 'en-GB'
-  u.rate = 1.02
-  u.pitch = 0.95
+  u.rate = 1.05
+  u.pitch = 1.35
   u.onstart = onStart
   u.onend = onEnd
   u.onerror = onEnd

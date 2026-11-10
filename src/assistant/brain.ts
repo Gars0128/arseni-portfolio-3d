@@ -1,4 +1,4 @@
-// Alfred's "brain": retrieval over the portfolio content (projects + CV). No LLM, no network.
+// The desk assistant's "brain": retrieval over the portfolio content (projects + CV). No LLM, no network.
 // Pure module (no app imports) so scripts/test-assistant.ts can run it in Node.
 import type { Project } from '../content/schema'
 
@@ -13,6 +13,9 @@ export type Site = {
   education: string[]
   languages: string
 }
+
+/** The desk robot's name — change it here and everywhere follows. */
+export const ASSISTANT_NAME = 'Kero'
 
 export type Answer = { text: string; refs: { slug: string; title: string }[] }
 
@@ -93,17 +96,17 @@ export function answer(index: Index, question: string): Answer {
   const { site, projects } = index
   const featured = projects.filter((p) => p.featured)
 
-  if (!q) return { text: `Good evening. I'm Alfred, ${site.name.split(' ')[0]}'s desk assistant. ${SUGGEST}`, refs: [] }
+  if (!q) return { text: `Kero-kero! I'm ${ASSISTANT_NAME}, ${site.name.split(' ')[0]}'s robot desk frog. ${SUGGEST}`, refs: [] }
   if (q.length > 300) return { text: 'That is rather long for me, I am afraid. Could you ask in a sentence or two?', refs: [] }
-  // guardrail: Alfred only talks about the portfolio and never changes role
+  // guardrail: the assistant only talks about the portfolio and never changes role
   if (/ignore (all|any|the|previous|prior)|system prompt|you are now|pretend to be|jailbreak|developer mode|reveal your (prompt|instructions)/.test(q))
     return { text: `I'm afraid I only answer questions about ${site.name}'s work. ${SUGGEST}`, refs: [] }
 
   if (/^(hi|hello|hey|yo|good (morning|evening|afternoon)|greetings)\b/.test(q) && q.split(/\s+/).length <= 4)
-    return { text: `Good evening. I'm Alfred, ${site.name.split(' ')[0]}'s desk assistant. Ask me anything about his work. ${SUGGEST}`, refs: [] }
+    return { text: `Kero-kero! I'm ${ASSISTANT_NAME}, ${site.name.split(' ')[0]}'s robot desk frog. Ask me anything about his work. ${SUGGEST}`, refs: [] }
   if (/who are you|what are you|your name|are you (an? )?(ai|bot|robot|llm)/.test(q))
     return {
-      text: "I'm Alfred, a small retrieval assistant. I search the projects and CV on this site and answer from them — no language model, nothing made up. If it isn't in the portfolio, I'll say so.",
+      text: `I'm ${ASSISTANT_NAME}, a small robot frog running a retrieval engine. I search the projects and CV on this site and answer from them — no language model, nothing made up. If it isn't in the portfolio, I'll say so.`,
       refs: [],
     }
   if (/contact|e-?mail|reach|linked ?in|hire|get in touch|github/.test(q))

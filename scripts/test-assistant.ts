@@ -1,4 +1,4 @@
-// Self-check for Alfred's retrieval brain: run with `node scripts/test-assistant.ts` (part of `npm run check`).
+// Self-check for the desk assistant's retrieval brain: run with `node scripts/test-assistant.ts` (part of `npm run check`).
 import { readdirSync, readFileSync } from 'node:fs'
 import assert from 'node:assert/strict'
 import { answer, buildIndex } from '../src/assistant/brain.ts'

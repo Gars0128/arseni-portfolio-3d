@@ -29,7 +29,7 @@ export default function App() {
         {mode === 'monitor' ? (
           <button onClick={() => setMode('room')}>← Back to room</button>
         ) : (
-          <span className="hint">click the monitor or ask the robot · drag to look around</span>
+          <span className="hint">click the monitor or ask the frog · drag to look around</span>
         )}
         {mode === 'room' && (
           <div className="controls">

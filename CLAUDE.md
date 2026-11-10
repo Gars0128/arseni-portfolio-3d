@@ -31,7 +31,7 @@ Push to `main` → `.github/workflows/deploy.yml` → GitHub Pages. Repo Setting
 - `public/draco/` is three's MIT Draco decoder, needed to load that chair.
 - Day/night: `store.night` → `dayMix` (objects/Lights.tsx) drives every light, the window sky, sunbeam and the LED arc. LED palette: `LED_COLORS` in store.ts.
 
-## Alfred (desk robot assistant)
+## Kero (robot desk frog assistant)
 - `src/assistant/brain.ts`: offline retrieval (BM25 + intents) over projects + `site.ts`. No LLM, no API key; answers only from portfolio content, refuses prompt-injection and off-topic. Tested by `scripts/test-assistant.ts` (part of `npm run check`) — add a case when you change intents.
 - `voice.ts`: Web Speech API (mic) + speechSynthesis; Firefox falls back to text.
-- `scene/objects/Robot.tsx` (3D robot, click → chat), `AssistantPanel.tsx` (chat UI). "Open project" uses `store.openProject` → Desktop opens it.
+- Name lives in `ASSISTANT_NAME` (brain.ts). `scene/objects/Robot.tsx` (3D robot frog, click → chat), `AssistantPanel.tsx` (chat UI). "Open project" uses `store.openProject` → Desktop opens it.
