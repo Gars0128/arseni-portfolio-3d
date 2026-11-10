@@ -4,11 +4,8 @@ import { Experience } from './scene/Experience'
 import { useStore } from './store'
 
 export default function App() {
-  const { mode, pixel, setMode, togglePixel } = useStore()
+  const { mode, setMode } = useStore()
   const [ready, setReady] = useState(false)
-  // Low-res render + CSS nearest-neighbour upscale = the pixel look. Monitor mode stays sharp.
-  const lowRes = pixel && mode === 'room'
-  const dpr = lowRes ? 0.35 : Math.min(window.devicePixelRatio, 2)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMode('room')
@@ -19,8 +16,8 @@ export default function App() {
   return (
     <>
       <Canvas
-        className={lowRes ? 'scene pixel' : 'scene'}
-        dpr={dpr}
+        className="scene"
+        dpr={[1, 2]}
         shadows
         camera={{ fov: 45, near: 0.05, far: 30, position: [-1.1, 1.6, 1.5] }}
         onCreated={() => setReady(true)}
@@ -34,11 +31,8 @@ export default function App() {
         {mode === 'monitor' ? (
           <button onClick={() => setMode('room')}>← Back to room</button>
         ) : (
-          <span className="hint">click the monitor</span>
+          <span className="hint">hover the computer · drag to look around</span>
         )}
-        <button onClick={togglePixel} aria-pressed={pixel}>
-          pixel: {pixel ? 'on' : 'off'}
-        </button>
         <a href="?lite">2D version</a>
       </div>
     </>

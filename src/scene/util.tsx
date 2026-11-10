@@ -1,7 +1,7 @@
-import { useCursor } from '@react-three/drei'
+import { RoundedBox, useCursor } from '@react-three/drei'
 import type { ThreeElements } from '@react-three/fiber'
 import { Select } from '@react-three/postprocessing'
-import { useMemo, useState, type ReactNode } from 'react'
+import { useMemo, useState, type ComponentProps, type ReactNode } from 'react'
 import * as THREE from 'three'
 
 export const rand = (seed: number) => () => {
@@ -9,24 +9,29 @@ export const rand = (seed: number) => () => {
   return (seed - 1) / 2147483646
 }
 
-type BoxProps = ThreeElements['mesh'] & {
+type BoxProps = Omit<ComponentProps<typeof RoundedBox>, 'args' | 'children' | 'ref'> & {
   size: [number, number, number]
   color: string
   emissive?: string
   emissiveIntensity?: number
+  roughness?: number
+  metalness?: number
+  map?: THREE.Texture
 }
 
-export function Box({ size, color, emissive, emissiveIntensity = 1, ...props }: BoxProps) {
+/** Rounded box: bevelled edges catch light, which is most of what makes primitives look "modelled". */
+export function Box({ size, color, emissive, emissiveIntensity = 1, roughness = 0.75, metalness = 0, map, ...props }: BoxProps) {
   return (
-    <mesh {...props}>
-      <boxGeometry args={size} />
+    <RoundedBox args={size} radius={Math.min(0.012, Math.min(...size) * 0.45)} smoothness={2} {...props}>
       <meshStandardMaterial
         color={color}
-        roughness={0.85}
+        map={map}
+        roughness={roughness}
+        metalness={metalness}
         emissive={emissive ?? '#000'}
         emissiveIntensity={emissiveIntensity}
       />
-    </mesh>
+    </RoundedBox>
   )
 }
 

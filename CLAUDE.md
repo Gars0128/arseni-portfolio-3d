@@ -1,6 +1,6 @@
 # Cozy Room Portfolio
 
-Interactive pixel-art 3D room (React Three Fiber). Clicking the main monitor flies the camera into an HTML mini-OS with the projects.
+Interactive cozy 3D room (React Three Fiber). Clicking the main monitor flies the camera into an HTML mini-OS with the projects.
 
 ## Rules
 - Stack: Vite + React + TS + R3F + drei + postprocessing + zustand + zod. Don't add new deps without asking.
@@ -20,7 +20,7 @@ Interactive pixel-art 3D room (React Three Fiber). Clicking the main monitor fli
 - `src/scene/Experience.tsx`: lights + object list. Positions are in meters; desk top at y=0.76, back wall z=-2, right wall x=1.6.
 - `src/scene/CameraRig.tsx`: room ↔ monitor camera, limits, parallax.
 - `src/scene/objects/Monitor.tsx`: `SCREEN` constant drives both the camera target and the `<Html>` size.
-- Pixel look = low canvas DPR + CSS `image-rendering: pixelated` (`App.tsx`) + `ColorDepth` (`effects/Post.tsx`).
+- Look = soft PCSS shadows from the lamp, Lightformer environment, SSAO + bloom + ACES tone mapping (`effects/Post.tsx`), procedural canvas textures (`textures.ts`). N8AO crashes on three r187, do not re-add it.
 - `?lite` or no WebGL → `src/lite/LitePage.tsx`.
 
 ## Deploy

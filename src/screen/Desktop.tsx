@@ -41,7 +41,7 @@ function Clock() {
 export function Desktop() {
   const [win, setWin] = useState<Win | null>(null)
   const [back, setBack] = useState<Win | null>(null)
-  const { pixel, togglePixel, setMode } = useStore()
+  const setMode = useStore((s) => s.setMode)
   const open = (w: Win) => {
     setBack(win)
     setWin(w)
@@ -113,7 +113,6 @@ export function Desktop() {
 
       <footer className="taskbar">
         <button onClick={() => setMode('room')}>⏏ room</button>
-        <button onClick={togglePixel}>pixel: {pixel ? 'on' : 'off'}</button>
         <span className="spacer" />
         <Clock />
       </footer>

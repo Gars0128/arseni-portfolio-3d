@@ -5,9 +5,9 @@
   "year": 2026,
   "featured": true,
   "role": "Solo",
-  "summary": "This site: a pixel-art 3D room where the monitor is the portfolio.",
+  "summary": "This site: a cozy 3D room where the monitor is the portfolio.",
   "problem": "Portfolios all look the same; I wanted one that shows 3D and front-end skills by being one.",
-  "solution": "React Three Fiber scene built from code, pixelated post-processing, an HTML mini-OS inside the monitor, zod-validated JSON content.",
+  "solution": "React Three Fiber scene built from code, soft shadows + ambient occlusion post-processing, an HTML mini-OS inside the monitor, zod-validated JSON content.",
   "result": "Adding a project = adding a JSON file and pushing; GitHub Actions rebuilds and deploys.",
   "stack": [
     "React",

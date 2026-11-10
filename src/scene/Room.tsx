@@ -1,7 +1,7 @@
 import * as THREE from 'three'
+import { plankTexture, plasterTexture, woodTexture } from './textures'
 import { Box, rand, useCanvasTexture } from './util'
 
-const WALL = '#d47a4c'
 const WOOD = '#8a5a3a'
 const DARK = '#2a2420'
 
@@ -61,21 +61,35 @@ export function Room() {
       {/* shell */}
       <mesh rotation-x={-Math.PI / 2} position={[-0.5, 0, -0.5]}>
         <planeGeometry args={[5, 5]} />
-        <meshStandardMaterial color="#5a3b28" roughness={0.9} />
+        <meshStandardMaterial map={plankTexture()} roughness={0.55} />
       </mesh>
-      <Box size={[5, 2.8, 0.05]} position={[-0.5, 1.4, -2.025]} color={WALL} />
-      <Box size={[0.05, 2.8, 5]} position={[1.625, 1.4, -0.5]} color={WALL} />
-      <Box size={[5, 0.05, 5]} position={[-0.5, 2.825, -0.5]} color="#a8532f" />
+      <mesh position={[-0.5, 1.4, -2.0]}>
+        <planeGeometry args={[5, 2.8]} />
+        <meshStandardMaterial map={plasterTexture()} roughness={0.95} />
+      </mesh>
+      <mesh position={[1.6, 1.4, -0.5]} rotation-y={-Math.PI / 2}>
+        <planeGeometry args={[5, 2.8]} />
+        <meshStandardMaterial map={plasterTexture()} roughness={0.95} />
+      </mesh>
+      <mesh position={[-0.5, 2.8, -0.5]} rotation-x={Math.PI / 2}>
+        <planeGeometry args={[5, 5]} />
+        <meshStandardMaterial color="#b8673e" roughness={1} />
+      </mesh>
+      {/* skirting boards */}
+      <Box size={[5, 0.08, 0.02]} position={[-0.5, 0.04, -1.99]} color="#e9dcc4" />
+      <Box size={[0.02, 0.08, 5]} position={[1.59, 0.04, -0.5]} color="#e9dcc4" />
+      {/* warm LED strip along the wall behind the desk */}
+      <Box size={[1.9, 0.012, 0.012]} position={[0.45, 0.775, -1.99]} color="#ffb070" emissive="#ff9a4a" emissiveIntensity={4} />
 
       {/* desk */}
-      <Box size={[2, 0.04, 0.72]} position={[0.45, 0.74, -1.63]} color={WOOD} />
+      <Box size={[2, 0.04, 0.72]} position={[0.45, 0.74, -1.63]} color="#ffffff" map={woodTexture()} roughness={0.5} />
       {[-0.5, 1.4].flatMap((x) =>
         [-1.95, -1.32].map((z) => <Box key={`${x}${z}`} size={[0.05, 0.72, 0.05]} position={[x, 0.36, z]} color={DARK} />),
       )}
       <Box size={[1.05, 0.006, 0.42]} position={[0.4, 0.763, -1.45]} color="#4f6b4a" />
 
       {/* monitor riser + books underneath */}
-      <Box size={[1.2, 0.03, 0.24]} position={[0.35, 0.885, -1.86]} color={WOOD} />
+      <Box size={[1.2, 0.03, 0.24]} position={[0.35, 0.885, -1.86]} color="#ffffff" map={woodTexture()} roughness={0.5} />
       <Box size={[0.03, 0.12, 0.24]} position={[-0.23, 0.82, -1.86]} color={WOOD} />
       <Box size={[0.03, 0.12, 0.24]} position={[0.93, 0.82, -1.86]} color={WOOD} />
       <Box size={[0.32, 0.04, 0.18]} position={[-0.05, 0.78, -1.86]} color="#7a2f2a" />
@@ -167,18 +181,16 @@ export function Room() {
         )
       })}
 
-      {/* chair with a blanket */}
-      <group position={[1.0, 0, -0.95]} rotation-y={-0.5}>
+      {/* office chair, turned toward the viewer */}
+      <group position={[1.12, 0, -0.9]} rotation-y={-0.8}>
         <mesh position={[0, 0.25, 0]}>
           <cylinderGeometry args={[0.025, 0.025, 0.42, 8]} />
           <meshStandardMaterial color="#222" />
         </mesh>
         <Box size={[0.5, 0.025, 0.06]} position={[0, 0.04, 0]} color="#222" />
         <Box size={[0.06, 0.025, 0.5]} position={[0, 0.04, 0]} color="#222" />
-        <Box size={[0.46, 0.07, 0.44]} position={[0, 0.47, 0]} color="#6e4630" />
-        <Box size={[0.44, 0.48, 0.06]} position={[0, 0.76, 0.22]} rotation-x={-0.1} color="#6e4630" />
-        <Box size={[0.48, 0.42, 0.035]} position={[0.03, 0.82, 0.27]} rotation={[-0.12, 0, 0.06]} color="#a8845a" />
-        <Box size={[0.48, 0.045, 0.16]} position={[0.03, 1.02, 0.21]} rotation-x={-0.1} color="#a8845a" />
+        <Box size={[0.46, 0.07, 0.44]} position={[0, 0.47, 0]} color="#4a2e22" roughness={0.45} />
+        <Box size={[0.44, 0.48, 0.06]} position={[0, 0.76, 0.22]} rotation-x={-0.1} color="#4a2e22" roughness={0.45} />
       </group>
     </group>
   )

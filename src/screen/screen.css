@@ -66,3 +66,13 @@
 }
 .taskbar button { background: #3b2a1f; border: 2px solid #e8894a; padding: 2px 12px; }
 .taskbar .spacer { flex: 1; }
+
+.saver { height: 100%; padding: 34px 48px; display: flex; flex-direction: column; background: radial-gradient(ellipse at 70% 10%, #3b5a4a, #141d22 75%); }
+.saver-top { display: flex; justify-content: space-between; opacity: 0.6; font-size: 26px; }
+.saver-card { margin: auto 0; animation: pop 0.4s ease-out; }
+.saver-cat { color: #e8894a; font-size: 32px; letter-spacing: 2px; text-transform: uppercase; }
+.saver-card h2 { font-size: 104px; margin: 8px 0 12px; line-height: 1.05; }
+.saver-card p { font-size: 40px; max-width: 1100px; opacity: 0.85; margin: 0 0 18px; }
+.saver .stack span { font-size: 28px; padding: 2px 10px; }
+.saver-cta { align-self: flex-start; padding: 10px 22px; border: 3px solid #e8894a; color: #e8894a; font-size: 32px; transition: all 0.2s; }
+.saver.hovered .saver-cta { background: #e8894a; color: #1a100b; transform: scale(1.06); }

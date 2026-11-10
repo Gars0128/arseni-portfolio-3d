@@ -1,14 +1,14 @@
 # Cozy Room Portfolio
 
-A pixel-art 3D room built with React Three Fiber. Walk around the desk, click the monitor, and the camera flies into a small "OS" that holds my projects.
+A cozy 3D room built with React Three Fiber. Walk around the desk, click the monitor, and the camera flies into a small "OS" that holds my projects.
 
 **▶ Live:** https://gars0128.github.io/safeplace/ · **2D version:** https://gars0128.github.io/safeplace/?lite
 
-Things to try: click the lamp, the PC, the cat; hover the pegboard; type `help` in the terminal.
+Things to try: hover the monitor, click the lamp, the PC, the cat; hover the pegboard; type `help` in the terminal.
 
 ## How it works
 - The scene is built in code from primitives, instanced leaves and canvas textures: no model files and no font downloads.
-- Pixel look: the canvas renders at about 1/3 resolution and the browser upscales it with nearest-neighbour; `ColorDepth` limits the palette. The monitor's HTML is a DOM layer, so its text stays sharp.
+- Lighting: desk-lamp spotlight with soft shadows, warm LED strip and monitor glow, image-based fill, SSAO, bloom and ACES tone mapping. The monitor cycles through projects; hover it and click to open the mini-OS.
 - Plants sway in a vertex shader (`src/scene/shaders/sway.ts`).
 - Content is JSON validated by zod. A broken file fails the build, not production.
 

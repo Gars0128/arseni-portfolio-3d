@@ -11,7 +11,6 @@
 html, body, #root { margin: 0; height: 100%; }
 body { overflow: hidden; }
 .scene { position: fixed !important; inset: 0; }
-.scene.pixel canvas { image-rendering: pixelated; }
 
 .boot {
   position: fixed; inset: 0; display: grid; place-items: center;

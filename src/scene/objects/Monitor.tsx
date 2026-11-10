@@ -1,5 +1,6 @@
 import { Html } from '@react-three/drei'
 import { Desktop } from '../../screen/Desktop'
+import { ScreenSaver } from '../../screen/ScreenSaver'
 import { useStore } from '../../store'
 import { Box, Interactive } from '../util'
 
@@ -14,6 +15,7 @@ export function Monitor() {
   const [x, y, z] = SCREEN.position
   return (
     <Interactive label="monitor" disabled={mode === 'monitor'} onSelect={() => setMode('monitor')}>
+      {(hovered) => (
       <group position={[x, y, z]}>
         <Box size={[SCREEN.w + 0.03, SCREEN.h + 0.03, 0.025]} color="#151515" />
         <mesh position-z={0.0135}>
@@ -32,10 +34,11 @@ export function Monitor() {
           className="screen-html"
         >
           <div className="os" style={{ width: SCREEN.w / PX, height: SCREEN.h / PX }}>
-            <Desktop />
+            {mode === 'monitor' ? <Desktop /> : <ScreenSaver hovered={hovered} />}
           </div>
         </Html>
       </group>
+      )}
     </Interactive>
   )
 }
