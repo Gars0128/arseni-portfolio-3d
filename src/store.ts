@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 
 type Mode = 'room' | 'monitor'
+export type RobotState = 'idle' | 'listening' | 'thinking' | 'speaking'
 
 /** LED palette borrowed from the reference room's TV / stream-deck glow; 'rainbow' animates along the arc. */
 export const LED_COLORS = ['#ff115e', '#ff6700', '#0082ff', '#af55cf', '#dbd85d', 'rainbow'] as const
@@ -11,6 +12,13 @@ type State = {
   night: boolean
   led: LedColor
   loaded: boolean
+  /** project the assistant asked to show; Desktop opens it and clears this */
+  pendingProject: string | null
+  assistantOpen: boolean
+  robot: RobotState
+  openProject: (slug: string) => void
+  setAssistantOpen: (open: boolean) => void
+  setRobot: (robot: RobotState) => void
   setMode: (mode: Mode) => void
   toggleNight: () => void
   setLed: (led: LedColor) => void
@@ -24,6 +32,12 @@ export const useStore = create<State>((set) => ({
   night: true,
   led: '#ff115e',
   loaded: false,
+  pendingProject: null,
+  assistantOpen: false,
+  robot: 'idle',
+  openProject: (slug) => set({ pendingProject: slug, mode: 'monitor' }),
+  setAssistantOpen: (assistantOpen) => set({ assistantOpen }),
+  setRobot: (robot) => set({ robot }),
   setMode: (mode) => set({ mode }),
   toggleNight: () => set((s) => ({ night: !s.night })),
   setLed: (led) => set({ led }),

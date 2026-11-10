@@ -55,13 +55,27 @@ function Clock() {
 }
 
 export function Desktop() {
-  const [win, setWin] = useState<Win | null>(null)
+  // a project requested by the desk assistant opens straight away
+  const [win, setWin] = useState<Win | null>(() => {
+    const slug = useStore.getState().pendingProject
+    return slug ? { kind: 'project', slug } : null
+  })
   const [back, setBack] = useState<Win | null>(null)
   const setMode = useStore((s) => s.setMode)
   const open = (w: Win) => {
     setBack(win)
     setWin(w)
   }
+
+  useEffect(() => {
+    if (useStore.getState().pendingProject) useStore.setState({ pendingProject: null })
+    return useStore.subscribe((s) => {
+      if (!s.pendingProject) return
+      setBack(null)
+      setWin({ kind: 'project', slug: s.pendingProject })
+      useStore.setState({ pendingProject: null })
+    })
+  }, [])
 
   return (
     <div className="desktop" style={WALLPAPER}>

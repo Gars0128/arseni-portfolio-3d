@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "check": "node scripts/validate-content.ts && tsc && eslint .",
+    "check": "node scripts/validate-content.ts && node scripts/test-assistant.ts && tsc && eslint .",
     "build": "npm run check && vite build",
     "preview": "vite preview",
     "lint": "eslint ."

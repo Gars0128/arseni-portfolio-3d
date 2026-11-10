@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useEffect } from 'react'
+import { AssistantPanel } from './assistant/AssistantPanel'
 import { Experience } from './scene/Experience'
 import { LED_COLORS, useStore } from './store'
 
@@ -22,11 +23,13 @@ export default function App() {
 
       <div className={loaded ? 'boot done' : 'boot'}>booting…</div>
 
+      <AssistantPanel />
+
       <div className="hud">
         {mode === 'monitor' ? (
           <button onClick={() => setMode('room')}>← Back to room</button>
         ) : (
-          <span className="hint">hover the computer · drag to look around</span>
+          <span className="hint">click the monitor or ask the robot · drag to look around</span>
         )}
         {mode === 'room' && (
           <div className="controls">
