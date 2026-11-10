@@ -1,6 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useEffect } from 'react'
 import { AssistantPanel } from './assistant/AssistantPanel'
+import { ConsentBanner } from './ConsentBanner'
 import { cameraApi } from './scene/CameraRig'
 import { Experience } from './scene/Experience'
 import { LED_COLORS, useStore } from './store'
@@ -30,6 +31,7 @@ export default function App() {
       <div className={loaded ? 'boot done' : 'boot'}>booting…</div>
 
       <AssistantPanel />
+      <ConsentBanner />
 
       <div className="hud">
         {mode === 'monitor' ? (

@@ -45,3 +45,17 @@ body { overflow: hidden; }
 .hud .swatch.on { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 10px #ffffff66; }
 .hud .daynight { border-radius: 999px; border-width: 1px; }
 
+
+/* visit-stats opt-in */
+.consent {
+  position: fixed; left: 16px; bottom: 56px; z-index: 7; width: min(400px, calc(100vw - 32px));
+  display: grid; gap: 10px; padding: 14px 16px; background: #0a0a0ce6; border: 1px solid #00f0ff33;
+  color: #d9f9ff; font: 12.5px/1.55 'JetBrains Mono', 'Cascadia Code', Consolas, ui-monospace, monospace;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.consent p { margin: 0; }
+.consent strong { color: #00f0ff; }
+.consent div { display: flex; gap: 8px; }
+.consent button { font: inherit; cursor: pointer; padding: 6px 14px; color: #0a0a0c; background: #00f0ff; border: 1px solid #00f0ff; }
+.consent button.ghost { color: #7fa6ad; background: transparent; border-color: #ffffff33; }
+.consent button:focus-visible { outline: 1px solid #fff; outline-offset: 2px; }

@@ -26,11 +26,16 @@ const flag = (cc: string) => (/^[A-Z]{2}$/.test(cc) ? String.fromCodePoint(...[.
 const clean = (s: unknown, re: RegExp, max: number) => (typeof s === 'string' && re.test(s) ? s.slice(0, max) : '')
 
 function describe(body: Record<string, unknown>, country: string) {
+  const who = `#${clean(body.vid, /^[a-f0-9]{8}$/, 8) || 'unknown'}`
   if (body.type === 'visit') {
     const ref = clean(body.ref, /^[a-z0-9.-]*$/i, 60)
     const device = body.device === 'mobile' ? '📱 mobile' : '🖥 desktop'
     const lang = clean(body.lang, /^[a-z]{2}$/, 2)
-    return `👀 New visitor · ${flag(country)} ${country || '??'} · ${ref ? `from ${ref}` : 'direct'} · ${device}${lang ? ` · ${lang}` : ''}`
+    const n = Math.min(Math.max(Math.floor(Number(body.n)) || 1, 1), 100000)
+    const days = Math.floor(Number(body.daysSince))
+    const ago = days < 0 || !Number.isFinite(days) ? '' : days === 0 ? ' · last seen today' : days === 1 ? ' · last seen yesterday' : ` · last seen ${Math.min(days, 3650)} days ago`
+    const status = n === 1 ? '🆕 first visit' : `🔁 returning · visit ${n}${ago}`
+    return `👀 Visitor ${who} · ${status}\n${flag(country)} ${country || '??'} · ${ref ? `from ${ref}` : 'direct'} · ${device}${lang ? ` · ${lang}` : ''}`
   }
   if (body.type === 'summary') {
     const seconds = Math.min(Math.max(Number(body.seconds) || 0, 0), 6 * 3600)
@@ -42,7 +47,7 @@ function describe(body: Record<string, unknown>, country: string) {
       const text = a.startsWith('project:') ? `📂 project: ${a.slice(8)}` : LABEL[a]
       return n > 1 ? `${text} ×${n}` : text
     })
-    return `🕒 ${flag(country)} visit ended after ${time}${lines.length ? `\n${lines.join('\n')}` : '\n(just looked around)'}`
+    return `🕒 Visitor ${who} ${flag(country)} left after ${time}${lines.length ? `\n${lines.join('\n')}` : '\n(just looked around)'}`
   }
   return null
 }

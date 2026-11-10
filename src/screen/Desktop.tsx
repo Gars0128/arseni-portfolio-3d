@@ -140,8 +140,10 @@ export function Desktop() {
                   ))}
                 </ul>
                 <p className="privacy">
-                  This site counts visits anonymously — country, referring site and which parts of
-                  the room were opened. No cookies, no IP addresses, nothing you type to Kero.
+                  If you allow it, this site counts visits anonymously — country, referring site and
+                  which parts of the room were opened, with a random ID kept in your browser to tell
+                  return visits from new ones. No cookies, no IP addresses, nothing you type to
+                  Kero.
                 </p>
               </>
             )}

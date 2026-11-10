@@ -24,17 +24,27 @@ const cases: [string, () => Promise<void>][] = [
     process.env.TELEGRAM_CHAT_ID = '1'
   }],
   ['visit becomes a readable message', async () => {
-    assert.equal((await POST(req({ type: 'visit', ref: 'www.linkedin.com', device: 'desktop', lang: 'pl' }))).status, 204)
-    assert.match(sent.at(-1)!, /New visitor · 🇵🇱 PL · from www\.linkedin\.com · 🖥 desktop · pl/)
+    assert.equal((await POST(req({ type: 'visit', vid: 'a3f9c2d1', n: 1, daysSince: -1, ref: 'www.linkedin.com', device: 'desktop', lang: 'pl' }))).status, 204)
+    assert.match(sent.at(-1)!, /Visitor #a3f9c2d1 · 🆕 first visit/)
+    assert.match(sent.at(-1)!, /🇵🇱 PL · from www\.linkedin\.com · 🖥 desktop · pl/)
+  }],
+  ['same visitor coming back is recognised', async () => {
+    await POST(req({ type: 'visit', vid: 'a3f9c2d1', n: 3, daysSince: 2 }))
+    assert.match(sent.at(-1)!, /Visitor #a3f9c2d1 · 🔁 returning · visit 3 · last seen 2 days ago/)
+  }],
+  ['a forged visitor id is not echoed', async () => {
+    await POST(req({ type: 'visit', vid: '<img src=x>', n: 'lots' }))
+    assert.match(sent.at(-1)!, /Visitor #unknown · 🆕 first visit/)
   }],
   ['rejects other origins', async () => {
     assert.equal((await POST(req({ type: 'visit' }, 'https://evil.example'))).status, 403)
   }],
   ['drops unknown or malicious actions, counts repeats', async () => {
     const before = sent.length
-    await POST(req({ type: 'summary', seconds: 192, actions: ['cv', 'kero_ask', 'kero_ask', '<script>', 'project:agentic-ticket-workflow', 'rm -rf'] }))
+    await POST(req({ type: 'summary', vid: 'a3f9c2d1', seconds: 192, actions: ['cv', 'kero_ask', 'kero_ask', '<script>', 'project:agentic-ticket-workflow', 'rm -rf'] }))
     assert.equal(sent.length, before + 1)
     const msg = sent.at(-1)!
+    assert.match(msg, /Visitor #a3f9c2d1/)
     assert.match(msg, /3m 12s/)
     assert.match(msg, /read the CV/)
     assert.match(msg, /asked Kero ×2/)
