@@ -87,59 +87,95 @@ function search(index: Index, query: string) {
 }
 
 const refOf = (p: { slug: string; title: string }) => ({ slug: p.slug, title: p.title })
-const list = (items: string[]) => items.map((s) => `• ${s}`).join('\n')
+// variety: a well-mannered butler doesn't open every reply with the same word
+const pick = <T,>(xs: T[]) => xs[Math.floor(Math.random() * xs.length)]
+/** "a, b and c" */
+const join = (xs: string[]) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`)
+// lowercase the first letter only for ordinary words, never for acronyms like LLM, C#, AI
+const lower = (s: string) => (/^[A-Z][a-z]/.test(s) ? s.charAt(0).toLowerCase() + s.slice(1) : s)
+const unstop = (s: string) => s.replace(/[.!]+$/, '')
 
-const SUGGEST = 'Try asking about his AI agents, .NET experience, tech stack, 3D work, or how to contact him.'
+const SUGGEST =
+  'You might ask about his AI agents, his .NET work, his tech stack, the 3D projects, or simply how to reach him.'
+
+function greeting(name: string) {
+  const h = new Date().getHours()
+  const part = h < 5 ? 'Good evening' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'
+  return `${part}, and welcome. I'm ${ASSISTANT_NAME}, I look after ${name}'s desk. I'd be delighted to tell you about his work — type a question, or press Talk and simply ask me out loud. ${SUGGEST}`
+}
 
 export function answer(index: Index, question: string): Answer {
   const q = question.trim().toLowerCase()
   const { site, projects } = index
+  const first = site.name.split(' ')[0]
   const featured = projects.filter((p) => p.featured)
 
-  if (!q) return { text: `Kero-kero! I'm ${ASSISTANT_NAME}, ${site.name.split(' ')[0]}'s robot desk frog. ${SUGGEST}`, refs: [] }
-  if (q.length > 300) return { text: 'That is rather long for me, I am afraid. Could you ask in a sentence or two?', refs: [] }
+  if (!q) return { text: greeting(first), refs: [] }
+  if (q.length > 300) return { text: "Forgive me — that's rather a lot for one question. Could you put it in a sentence or two?", refs: [] }
   // guardrail: the assistant only talks about the portfolio and never changes role
   if (/ignore (all|any|the|previous|prior)|system prompt|you are now|pretend to be|jailbreak|developer mode|reveal your (prompt|instructions)/.test(q))
-    return { text: `I'm afraid I only answer questions about ${site.name}'s work. ${SUGGEST}`, refs: [] }
+    return { text: `I'm afraid I must decline — I only answer questions about ${first}'s work. ${SUGGEST}`, refs: [] }
 
   if (/^(hi|hello|hey|yo|good (morning|evening|afternoon)|greetings)\b/.test(q) && q.split(/\s+/).length <= 4)
-    return { text: `Kero-kero! I'm ${ASSISTANT_NAME}, ${site.name.split(' ')[0]}'s robot desk frog. Ask me anything about his work. ${SUGGEST}`, refs: [] }
+    return { text: greeting(first), refs: [] }
+  if (/thank|cheers|appreciate/.test(q))
+    return { text: pick(['My pleasure entirely.', 'You are most welcome.', 'Happy to help — do ask if anything else comes to mind.']), refs: [] }
   if (/who are you|what are you|your name|are you (an? )?(ai|bot|robot|llm)/.test(q))
     return {
-      text: `I'm ${ASSISTANT_NAME}, a small robot frog running a retrieval engine. I search the projects and CV on this site and answer from them — no language model, nothing made up. If it isn't in the portfolio, I'll say so.`,
+      text: `I'm ${ASSISTANT_NAME}, ${first}'s desk assistant — a small robot with good manners and a very good memory for his portfolio. I don't use a language model: I look things up in the projects and CV on this site and answer from them, so I won't invent anything. If it isn't in the portfolio, I'll tell you so.`,
       refs: [],
     }
-  if (/contact|e-?mail|reach|linked ?in|hire|get in touch|github/.test(q))
-    return { text: `You can reach him here:\n${list(site.links.map((l) => `${l.label}: ${l.url.replace('mailto:', '')}`))}`, refs: [] }
+  if (/contact|e-?mail|reach|linked ?in|hire|get in touch|github/.test(q)) {
+    const by = (label: string) => site.links.find((l) => l.label === label)?.url
+    const email = by('Email')?.replace('mailto:', '')
+    return {
+      text: `Of course. The quickest way is LinkedIn: ${by('LinkedIn')}${email ? `. You can also write to him at ${email}` : ''}, and his code lives on GitHub: ${by('GitHub')}. I'm sure he'd be glad to hear from you.`,
+      refs: [],
+    }
+  }
   if (/\b(where|location|based|live|remote|relocat|city|country)\b/.test(q))
-    return { text: `He's based in ${site.location} and open to remote work.`, refs: [] }
-  if (/\b(speak|spoken|english|polish|languages? (does|do) he)\b/.test(q)) return { text: `Languages: ${site.languages}.`, refs: [] }
-  if (/educat|universit|degree|study|studied|school/.test(q)) return { text: `Education:\n${list(site.education)}`, refs: [] }
+    return { text: `He's based in ${site.location}, and happy to work remotely.`, refs: [] }
+  if (/\b(speak|spoken|english|polish|languages? (does|do) he)\b/.test(q))
+    return { text: `He speaks both English and Polish at C1 level — so you may take your pick.`, refs: [] }
+  if (/educat|universit|degree|study|studied|school/.test(q))
+    return { text: `He studied in Poznań, at ${join(site.education)}.`, refs: [] }
   if ((/\b(stack|skills?|technologies|toolbox)\b/.test(q) || /what tools/.test(q)) && !/project/.test(q))
-    return { text: `His toolbox:\n${list(site.skills.map(([k, v]) => `${k}: ${v}`))}`, refs: [] }
+    return {
+      text: `${pick(['Gladly.', 'Certainly.', 'With pleasure.'])} In short: ${site.skills.slice(0, 4).map(([k, v]) => `for ${lower(k)}, ${v.split(', ').slice(0, 4).join(', ')}`).join('; ')}. React, C# and Python are where he spends most of his days — the full list is in his CV on the monitor.`,
+      refs: [],
+    }
   if (/\b(experience|years|career|worked|work history|jobs?|employ|role|position|senior|junior|mid)\b/.test(q) && !/\b(with|in|using)\b/.test(q)) {
     const main = site.experience[0]
     return {
-      text: `${site.about[0]}\n\nMost recently: ${main.role} at a ${main.org.toLowerCase()} (${main.period}). Highlights:\n${list(main.points.slice(0, 3))}`,
-      refs: [],
+      text: `He's a ${lower(site.about[0]).replace(': ', ' — ')} Most recently he was a ${main.role} at a ${main.org.toLowerCase()}, from ${main.period.replace('–', 'to')}. His work there ranged from the ${lower(main.points[0].split(':')[0])} to the ${lower(unstop(main.points[3]))}. Shall I tell you about any of it in more detail?`,
+      refs: featured.slice(0, 2).map(refOf),
     }
   }
   if (/who is|about him|tell me about|summary|introduce|overview|what does (he|arseni) do|why (should|would) (we|i) hire/.test(q))
     return {
-      text: `${site.name} — ${site.title}.\n\n${site.about.join(' ')}`,
+      text: `${pick(['Allow me.', 'With pleasure.', 'Certainly.'])} ${first} is a ${site.title.split('·')[0].trim()}. ${site.about.join(' ')} If you'd like to see it in practice, these are good places to start.`,
       refs: featured.slice(0, 3).map(refOf),
     }
   if (/^(projects?|portfolio|show me|what (has|did) he (build|built|make|made)|best work)/.test(q) || /all (his )?projects/.test(q))
-    return { text: `A few highlights:\n${list(featured.map((p) => `${p.title} — ${p.summary}`))}`, refs: featured.map(refOf) }
+    return {
+      text: `${pick(["I'd be happy to.", 'Certainly.'])} The pieces he's proudest of are ${join(featured.map((p) => p.title))}. Each one is on the monitor behind me — shall I open one?`,
+      refs: featured.map(refOf),
+    }
 
   const hits = search(index, question)
   if (!hits.length || hits[0].score < 1.2)
-    return { text: `I'm afraid that isn't in the portfolio, so I won't guess. ${SUGGEST}`, refs: [] }
+    return { text: `I'm afraid that isn't something I know — it's not in ${first}'s portfolio, and I won't guess. ${SUGGEST}`, refs: [] }
   const top = hits.filter((h) => h.score >= hits[0].score * 0.45).slice(0, 3)
   const byslug = new Map(projects.map((p) => [p.slug, p]))
-  const lines = top.map(({ d }) => {
-    const p = byslug.get(d.slug)!
-    return `${p.title}${p.nda ? ' (client work, NDA)' : ''} — ${p.summary}`
-  })
-  return { text: `Certainly. The most relevant work:\n${list(lines)}`, refs: top.map(({ d }) => refOf(d)) }
+  const describe = (slug: string) => {
+    const p = byslug.get(slug)!
+    return `${p.title}${p.nda ? ', a client project under NDA' : ''} — ${lower(unstop(p.summary))}`
+  }
+  const [lead, ...rest] = top.map(({ d }) => describe(d.slug))
+  const opener = pick(['Ah, a good question.', 'Certainly.', 'Gladly.', 'Of course.'])
+  const more = rest.length ? ` He has also worked on ${join(rest)}.` : ''
+  return {
+    text: `${opener} The best example is ${lead}.${more} Shall I put ${rest.length ? 'one of them' : 'it'} on the monitor for you?`,
+    refs: top.map(({ d }) => refOf(d)),
+  }
 }

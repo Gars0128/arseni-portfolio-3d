@@ -19,6 +19,27 @@ const reducedMotion = () => {
   }
 }
 
+// Small inline icons: universally readable symbols instead of abstract glyphs.
+const icon = { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, 'aria-hidden': true }
+const SpeakerOn = () => (
+  <svg {...icon}>
+    <path d="M11 5 6 9H3v6h3l5 4z" />
+    <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" />
+  </svg>
+)
+const SpeakerOff = () => (
+  <svg {...icon}>
+    <path d="M11 5 6 9H3v6h3l5 4z" />
+    <path d="m16 9 5 6M21 9l-5 6" />
+  </svg>
+)
+const Mic = () => (
+  <svg {...icon}>
+    <rect x="9" y="3" width="6" height="11" rx="3" />
+    <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+  </svg>
+)
+
 /** Terminal-style typing: characters appear left to right behind a blinking cursor. */
 function Typed({ text }: { text: string }) {
   const [shown, setShown] = useState(() => (reducedMotion() ? text.length : 0))
@@ -102,8 +123,14 @@ export function AssistantPanel() {
           <span className={`alfred-status ${robot}`}>{status}</span>
         </div>
         {canSpeak && (
-          <button onClick={() => (stopSpeaking(), setVoiceOn((v) => !v))} aria-pressed={voiceOn} title="Read answers aloud" aria-label="Read answers aloud">
-            {voiceOn ? '◉' : '○'}
+          <button
+            className="voice-toggle"
+            onClick={() => (stopSpeaking(), setVoiceOn((v) => !v))}
+            aria-pressed={voiceOn}
+            title={voiceOn ? `${ASSISTANT_NAME} reads answers aloud — click to mute` : 'Answers are text only — click to hear them'}
+          >
+            {voiceOn ? <SpeakerOn /> : <SpeakerOff />}
+            <span>{voiceOn ? 'Voice on' : 'Voice off'}</span>
           </button>
         )}
         <button onClick={() => setAssistantOpen(false)} aria-label={`Close ${ASSISTANT_NAME}`}>
@@ -151,14 +178,20 @@ export function AssistantPanel() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.stopPropagation()}
-          placeholder="query arseni's work_"
+          placeholder={canListen ? 'Type, or press Talk and just ask…' : "Ask about Arseni's work…"}
           aria-label="Your question"
           maxLength={300}
           autoFocus
         />
         {canListen && (
-          <button type="button" className={robot === 'listening' ? 'mic on' : 'mic'} onClick={onMic} aria-label={robot === 'listening' ? 'Stop listening' : 'Ask by voice'}>
-            ◎
+          <button
+            type="button"
+            className={robot === 'listening' ? 'mic on' : 'mic'}
+            onClick={onMic}
+            title={robot === 'listening' ? 'Listening — click to stop' : `Talk to ${ASSISTANT_NAME} out loud`}
+          >
+            <Mic />
+            <span>{robot === 'listening' ? 'Listening…' : 'Talk'}</span>
           </button>
         )}
         <button type="submit" aria-label="Send">

@@ -95,3 +95,13 @@
   .alfred, .alfred-title, .alfred-title::before, .alfred-title::after, .alfred-static, .msg.fresh, .cursor, .alfred-dot, .alfred form .mic.on { animation: none !important; }
   .alfred-title::before, .alfred-title::after { display: none; }
 }
+
+/* labelled controls: icon + word, so it's obvious you can listen and talk */
+.alfred header .voice-toggle { width: auto; display: flex; align-items: center; gap: 6px; padding: 0 9px; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; }
+.alfred header .voice-toggle[aria-pressed='false'] { color: var(--dim); }
+.alfred form .mic {
+  width: auto; display: flex; align-items: center; gap: 6px; padding: 0 10px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--cyan); border-color: #00f0ff66;
+}
+.alfred form .mic:hover { background: #00f0ff1a; color: var(--cyan); box-shadow: 0 0 12px #00f0ff55; }
+.alfred form .mic.on { color: #000; }

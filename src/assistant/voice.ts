@@ -44,26 +44,44 @@ export function listen(): Promise<string> {
 
 export const stopListening = () => active?.abort()
 
-/** A light English voice with a raised pitch — the assistant is a small robot frog. */
+/**
+ * The most human-sounding British voice available: Edge's neural "Natural" voices first,
+ * then Google UK, then any en-GB, then any English voice.
+ */
 function pickVoice() {
   const voices = speechSynthesis.getVoices().filter((v) => v.lang.startsWith('en'))
   return (
-    voices.find((v) => /daniel|google uk english male|ryan|arthur|george/i.test(v.name)) ??
+    voices.find((v) => v.lang === 'en-GB' && /natural/i.test(v.name) && /ryan|thomas|oliver|george|male/i.test(v.name)) ??
+    voices.find((v) => v.lang === 'en-GB' && /natural/i.test(v.name)) ??
+    voices.find((v) => /google uk english male/i.test(v.name)) ??
+    voices.find((v) => /natural/i.test(v.name)) ??
     voices.find((v) => v.lang === 'en-GB') ??
     voices[0]
   )
 }
 
+/** What to say out loud: links and e-mails are read as words, list markup is dropped. */
+export function toSpeech(text: string) {
+  return text
+    .replace(/https?:\/\/(www\.)?linkedin\.com\S*/gi, 'his LinkedIn profile')
+    .replace(/https?:\/\/(www\.)?github\.com\S*/gi, 'GitHub')
+    .replace(/https?:\/\/\S+/gi, 'the link on screen')
+    .replace(/\S+@\S+\.\w+/g, 'the e-mail address on screen')
+    .replace(/•/g, '')
+    .replace(/\n+/g, '. ')
+    .replace(/\s+—\s+/g, ', ')
+}
+
 export function speak(text: string, onStart: () => void, onEnd: () => void) {
   if (!canSpeak) return onEnd()
   speechSynthesis.cancel()
-  // bullet lists read badly aloud: speak them as a sentence
-  const u = new SpeechSynthesisUtterance(text.replace(/•/g, '').replace(/\n+/g, '. ').replace(/\s+—\s+/g, ': '))
+  const u = new SpeechSynthesisUtterance(toSpeech(text))
   const v = pickVoice()
   if (v) u.voice = v
   u.lang = v?.lang ?? 'en-GB'
-  u.rate = 1.05
-  u.pitch = 1.35
+  // natural pace and pitch: warm, not robotic
+  u.rate = 0.98
+  u.pitch = 1
   u.onstart = onStart
   u.onend = onEnd
   u.onerror = onEnd
