@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { track } from './track'
 
 // The track is local-only (public/music is git-ignored: commercial music can't be published).
 const SRC = `${import.meta.env.BASE_URL}music/track.mp3`
@@ -32,6 +33,7 @@ export const useMusic = create<MusicState>((set, get) => ({
   toggle: () => {
     if (!get().available) return
     if (audioEl.paused) {
+      track('play')
       void audioCtx.resume?.()
       void audioEl.play()
     } else audioEl.pause()

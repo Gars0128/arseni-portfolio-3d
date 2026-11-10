@@ -3,6 +3,7 @@ import { projects } from '../content/projects'
 import { categories, type Category } from '../content/schema'
 import { site } from '../content/site'
 import { useStore } from '../store'
+import { track } from '../track'
 import { CvView } from './CvView'
 import { Game } from './Game'
 import { NowPlaying, Player } from './Player'
@@ -63,6 +64,7 @@ export function Desktop() {
   const [back, setBack] = useState<Win | null>(null)
   const setMode = useStore((s) => s.setMode)
   const open = (w: Win) => {
+    track(w.kind === 'project' ? `project:${w.slug}` : w.kind === 'folder' ? 'monitor' : w.kind)
     setBack(win)
     setWin(w)
   }
@@ -127,17 +129,27 @@ export function Desktop() {
             {win.kind === 'music' && <Player />}
             {win.kind === 'game' && <Game />}
             {win.kind === 'contact' && (
-              <ul>
-                {site.links.map((l) => (
-                  <li key={l.url}>
-                    <a href={l.url} target="_blank" rel="noreferrer">
-                      {l.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <>
+                <ul>
+                  {site.links.map((l) => (
+                    <li key={l.url}>
+                      <a href={l.url} target="_blank" rel="noreferrer">
+                        {l.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                <p className="privacy">
+                  This site counts visits anonymously — country, referring site and which parts of
+                  the room were opened. No cookies, no IP addresses, nothing you type to Kero.
+                </p>
+              </>
             )}
-            {win.kind === 'terminal' && <Terminal onOpen={(slug) => open(slug === 'cv' ? { kind: 'cv' } : { kind: 'project', slug })} />}
+            {win.kind === 'terminal' && (
+              <Terminal
+                onOpen={(slug) => open(slug === 'cv' ? { kind: 'cv' } : { kind: 'project', slug })}
+              />
+            )}
           </div>
         </section>
       )}

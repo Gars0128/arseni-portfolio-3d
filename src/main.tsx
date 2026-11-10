@@ -1,6 +1,7 @@
 import { StrictMode, lazy, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles.css'
+import './track'
 import { LitePage } from './lite/LitePage'
 
 const App = lazy(() => import('./App'))

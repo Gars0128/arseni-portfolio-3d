@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { projects } from '../content/projects'
 import { site } from '../content/site'
 import { useStore } from '../store'
+import { track } from '../track'
 import { ASSISTANT_NAME, answer, buildIndex, type Answer } from './brain'
 import { canListen, canSpeak, listen, speak, stopListening, stopSpeaking } from './voice'
 import './assistant.css'
@@ -85,6 +86,7 @@ export function AssistantPanel() {
     setInput('')
     setError('')
     setRobot('thinking')
+    track('kero_ask')
     const a = answer(index, q)
     setMsgs((m) => [...m, { from: 'you', text: q }, { from: 'alfred', ...a }])
     if (voiceOn) speak(a.text, () => setRobot('speaking'), () => setRobot('idle'))
@@ -95,6 +97,7 @@ export function AssistantPanel() {
     if (robot === 'listening') return stopListening()
     stopSpeaking()
     setError('')
+    track('kero_voice')
     setRobot('listening')
     try {
       const heard = await listen()

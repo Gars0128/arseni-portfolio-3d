@@ -1,6 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
+import { track } from '../../track'
 import { cameraApi } from '../CameraRig'
 import { Box, Interactive } from '../util'
 
@@ -138,6 +139,7 @@ export function PC() {
       label="pc"
       position={POS.toArray()}
       onSelect={() => {
+        track('pc')
         boost.current = 5
         cameraApi.focus(new THREE.Vector3(POS.x, POS.y + 0.02, POS.z + 0.23), 0.62)
       }}

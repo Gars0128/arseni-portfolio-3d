@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { track } from './track'
 
 type Mode = 'room' | 'monitor'
 export type RobotState = 'idle' | 'listening' | 'thinking' | 'speaking'
@@ -35,12 +36,31 @@ export const useStore = create<State>((set) => ({
   pendingProject: null,
   assistantOpen: false,
   robot: 'idle',
-  openProject: (slug) => set({ pendingProject: slug, mode: 'monitor' }),
-  setAssistantOpen: (assistantOpen) => set({ assistantOpen }),
+  openProject: (slug) => {
+    track(`project:${slug}`)
+    set({ pendingProject: slug, mode: 'monitor' })
+  },
+  setAssistantOpen: (assistantOpen) => {
+    if (assistantOpen) track('kero')
+    set({ assistantOpen })
+  },
   setRobot: (robot) => set({ robot }),
-  setMode: (mode) => set({ mode }),
-  toggleNight: () => set((s) => ({ night: !s.night })),
-  setLed: (led) => set({ led }),
-  nextLed: () => set((s) => ({ led: LED_COLORS[(LED_COLORS.indexOf(s.led) + 1) % LED_COLORS.length] })),
+  setMode: (mode) => {
+    if (mode === 'monitor') track('monitor')
+    set({ mode })
+  },
+  toggleNight: () =>
+    set((s) => {
+      track(s.night ? 'day' : 'night')
+      return { night: !s.night }
+    }),
+  setLed: (led) => {
+    track('led')
+    set({ led })
+  },
+  nextLed: () => {
+    track('led')
+    set((s) => ({ led: LED_COLORS[(LED_COLORS.indexOf(s.led) + 1) % LED_COLORS.length] }))
+  },
   setLoaded: () => set({ loaded: true }),
 }))

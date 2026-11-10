@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { useStore } from '../store'
+import { track } from '../track'
 
 export type View = {
   fov: number
@@ -83,7 +84,9 @@ export function CameraRig({ view }: { view: View }) {
       ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1)
       raycaster.setFromCamera(ndc, camera)
       const hit = raycaster.intersectObjects(scene.children, true).find((h) => (h.object as THREE.Mesh).isMesh && h.object.visible)
-      if (hit) cameraApi.focus(hit.point, 0.75)
+      if (!hit) return
+      track('inspect')
+      cameraApi.focus(hit.point, 0.75)
     }
     el.addEventListener('dblclick', onDbl)
     return () => el.removeEventListener('dblclick', onDbl)
