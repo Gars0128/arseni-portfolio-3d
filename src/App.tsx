@@ -1,6 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useEffect } from 'react'
 import { AssistantPanel } from './assistant/AssistantPanel'
+import { cameraApi } from './scene/CameraRig'
 import { Experience } from './scene/Experience'
 import { LED_COLORS, useStore } from './store'
 
@@ -8,7 +9,12 @@ export default function App() {
   const { mode, setMode, loaded, night, toggleNight, led, setLed } = useStore()
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMode('room')
+    // Esc: leave the monitor, or from a close-up in the room go back to the overview
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (useStore.getState().mode === 'room') cameraApi.reset()
+      else setMode('room')
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [setMode])
@@ -29,7 +35,7 @@ export default function App() {
         {mode === 'monitor' ? (
           <button onClick={() => setMode('room')}>← Back to room</button>
         ) : (
-          <span className="hint">click the monitor or ask the frog · drag to look around</span>
+          <span className="hint">drag to look · scroll to zoom where you point · double-click anything to inspect it</span>
         )}
         {mode === 'room' && (
           <div className="controls">
@@ -45,6 +51,9 @@ export default function App() {
                 />
               ))}
             </div>
+            <button className="daynight" onClick={() => cameraApi.reset()} title="Back to the overview (Esc)">
+              ↺ view
+            </button>
             <button className="daynight" onClick={toggleNight} aria-label={night ? 'Switch to day' : 'Switch to night'}>
               {night ? '☀ day' : '☾ night'}
             </button>

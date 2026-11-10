@@ -28,11 +28,12 @@ const VIEW: View = {
   target: [0.55, 1.1, -1.45],
   screen: SCREEN.position,
   monitorDistance: 0.55,
-  minDistance: 1.4,
+  minDistance: 0.3,
   maxDistance: 4.2,
   azimuthRange: 32,
   polar: [60, 95],
   parallax: 0.07,
+  bounds: [[-1.9, 0.08, -1.95], [1.55, 2.7, 2.2]],
 }
 
 function Setup() {
