@@ -1,24 +1,36 @@
 import { useState } from 'react'
 import { getConsent, setConsent, trackingAvailable } from './track'
 
-/** Opt-in for anonymous visit stats. Shown once; nothing is sent unless the visitor says yes. */
+/** Short opt-in for anonymous visit stats; details only on demand. Nothing is sent unless accepted. */
 export function ConsentBanner() {
   const [open, setOpen] = useState(() => trackingAvailable && getConsent() === null)
+  const [policy, setPolicy] = useState(false)
   if (!open) return null
+
   const answer = (v: 'yes' | 'no') => {
     setConsent(v)
     setOpen(false)
   }
+
   return (
-    <div className="consent" role="region" aria-label="Visit statistics">
+    <div className="consent" role="region" aria-label="Privacy">
       <p>
-        <strong>Mind if I count your visit?</strong> Anonymous: country, where you came from and what you opened in the room. A random ID in
-        this browser lets me tell a return visit from a new one. No cookies, no IP, nothing you type.
+        This site counts visits anonymously.{' '}
+        <button className="link" onClick={() => setPolicy((p) => !p)} aria-expanded={policy}>
+          Privacy policy
+        </button>
       </p>
+      {policy && (
+        <p className="policy">
+          With your consent, a random ID is stored in this browser (no cookies) so return visits can be told apart from new ones. Sent: country,
+          referring site, device type and which parts of the room you opened. Never collected: IP address, name, anything you type to Kero.
+          Decline and nothing is sent.
+        </p>
+      )}
       <div>
-        <button onClick={() => answer('yes')}>Sure</button>
+        <button onClick={() => answer('yes')}>Accept</button>
         <button className="ghost" onClick={() => answer('no')}>
-          No thanks
+          Decline
         </button>
       </div>
     </div>
