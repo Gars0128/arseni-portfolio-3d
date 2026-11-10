@@ -47,7 +47,6 @@ export function Robot() {
   const head = useRef<THREE.Group>(null)
   const eyes = useRef<THREE.Mesh[]>([])
   const mouth = useRef<THREE.Mesh>(null)
-  const throat = useRef<THREE.Mesh>(null)
   const bubble = useRef<THREE.Group>(null)
   const eyeMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#000', emissive: EYE.idle, emissiveIntensity: 2.4, toneMapped: false }), [])
   const glowMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#0b2a1a', emissive: '#39ffb0', emissiveIntensity: 0.6, toneMapped: false, transparent: true, opacity: 0.85 }), [])
@@ -64,9 +63,7 @@ export function Robot() {
     eyeMat.emissive.lerp(new THREE.Color(EYE[robot]), 0.15)
     const talk = robot === 'speaking' ? Math.abs(Math.sin(t * 13)) : 0
     mouth.current!.scale.y = 1 + talk * 2.5
-    // throat sac puffs and glows while speaking, breathes gently otherwise
-    const puff = robot === 'speaking' ? 1 + talk * 0.45 : 1 + Math.sin(t * 1.6) * 0.06
-    throat.current!.scale.setScalar(puff)
+    // spine strip glows with speech
     glowMat.emissiveIntensity = robot === 'speaking' ? 1.2 + talk * 2 : robot === 'listening' ? 1.4 : 0.5
     glowMat.emissive.set(robot === 'listening' ? '#ff2a6d' : '#39ffb0')
     if (bubble.current) bubble.current.position.y = 0.27 + Math.sin(t * 2) * 0.008
@@ -110,10 +107,6 @@ export function Robot() {
         <group ref={head} position-y={0.088}>
           <mesh material={shell} scale={[1.4, 0.68, 1.1]}>
             <sphereGeometry args={[0.045, 28, 20]} />
-          </mesh>
-          {/* glowing throat sac */}
-          <mesh ref={throat} material={glowMat} position={[0, -0.016, 0.03]} scale={1}>
-            <sphereGeometry args={[0.017, 20, 14]} />
           </mesh>
           {/* mouth: a wide light strip */}
           <mesh ref={mouth} material={eyeMat} position={[0, -0.002, 0.049]}>
