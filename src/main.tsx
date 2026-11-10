@@ -12,7 +12,8 @@ const hasWebGL = (() => {
     return false
   }
 })()
-const lite = !hasWebGL || new URLSearchParams(location.search).has('lite')
+// Fallback only for browsers without WebGL; there is no user-facing 2D toggle.
+const lite = !hasWebGL
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

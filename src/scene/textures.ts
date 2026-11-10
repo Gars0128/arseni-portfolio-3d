@@ -45,7 +45,7 @@ export const plankTexture = () =>
     512,
     (c) => {
       const r = rand(31)
-      const shades = ['#6b4a33', '#76523a', '#61432e', '#7c5940']
+      const shades = ['#6e4c35', '#734f37', '#694832', '#765239']
       for (let row = 0; row < 8; row++) {
         let x = -r() * 200
         while (x < 512) {
@@ -83,3 +83,54 @@ export const plasterTexture = () =>
     },
     [6, 4],
   )
+
+/** Kilim-style rug (own pattern): terracotta field, cream diamonds, woven noise, fringe on the short ends. */
+export const rugTexture = () =>
+  canvasTex('rug', 1024, 692, (c) => {
+    const r = rand(77)
+    const W = 1024, H = 692, F = 34 // fringe length
+    // fringe
+    c.strokeStyle = '#e9dcc4'
+    c.lineWidth = 2
+    for (let y = 14; y < H - 14; y += 7)
+      for (const [x0, x1] of [[2 + r() * 8, F], [W - F, W - 2 - r() * 8]]) {
+        c.beginPath()
+        c.moveTo(x0, y)
+        c.lineTo(x1, y + (r() - 0.5) * 3)
+        c.stroke()
+      }
+    const x = F, w = W - 2 * F
+    const bands: [string, number][] = [['#2f2520', 0], ['#e9d9bd', 18], ['#b5522f', 34], ['#e9d9bd', 70], ['#3f5a45', 80], ['#c96a3f', 96]]
+    for (const [col, inset] of bands) {
+      c.fillStyle = col
+      c.fillRect(x + inset, inset, w - inset * 2, H - inset * 2)
+    }
+    // zigzag in the border
+    c.strokeStyle = '#2f2520'
+    c.lineWidth = 6
+    for (const [y0, dir] of [[52, 1], [H - 52, -1]] as const) {
+      c.beginPath()
+      for (let i = 0, px = x + 34; px <= x + w - 34; i++, px += 24) c.lineTo(px, y0 + (i % 2 ? 10 : -10) * dir)
+      c.stroke()
+    }
+    // central diamonds
+    const cy = H / 2
+    for (let i = 0; i < 5; i++) {
+      const cx = x + w / 2 + (i - 2) * 175
+      for (const [s, col] of [[118, '#e9d9bd'], [92, '#2f2520'], [70, '#d9a24a'], [44, '#3f5a45'], [18, '#e9d9bd']] as const) {
+        const sx = s * (i === 2 ? 1 : 0.72)
+        c.fillStyle = col
+        c.beginPath()
+        c.moveTo(cx, cy - sx * 1.4)
+        c.lineTo(cx + sx, cy)
+        c.lineTo(cx, cy + sx * 1.4)
+        c.lineTo(cx - sx, cy)
+        c.fill()
+      }
+    }
+    // woven texture
+    for (let i = 0; i < 9000; i++) {
+      c.fillStyle = r() > 0.5 ? '#ffffff12' : '#00000016'
+      c.fillRect(x + r() * w, r() * H, 3, 1)
+    }
+  })

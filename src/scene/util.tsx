@@ -17,12 +17,13 @@ type BoxProps = Omit<ComponentProps<typeof RoundedBox>, 'args' | 'children' | 'r
   roughness?: number
   metalness?: number
   map?: THREE.Texture
+  radius?: number
 }
 
 /** Rounded box: bevelled edges catch light, which is most of what makes primitives look "modelled". */
-export function Box({ size, color, emissive, emissiveIntensity = 1, roughness = 0.75, metalness = 0, map, ...props }: BoxProps) {
+export function Box({ size, color, emissive, emissiveIntensity = 1, roughness = 0.75, metalness = 0, map, radius = 0.012, ...props }: BoxProps) {
   return (
-    <RoundedBox args={size} radius={Math.min(0.012, Math.min(...size) * 0.45)} smoothness={2} {...props}>
+    <RoundedBox args={size} radius={Math.min(radius, Math.min(...size) * 0.45)} smoothness={radius > 0.012 ? 4 : 2} {...props}>
       <meshStandardMaterial
         color={color}
         map={map}

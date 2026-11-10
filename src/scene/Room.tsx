@@ -1,31 +1,66 @@
 import * as THREE from 'three'
-import { plankTexture, plasterTexture, woodTexture } from './textures'
+import { plankTexture, plasterTexture, rugTexture, woodTexture } from './textures'
 import { Box, rand, useCanvasTexture } from './util'
 
 const WOOD = '#8a5a3a'
 const DARK = '#2a2420'
+const LEATHER = '#5a3324'
+
+export const HEX_R = 0.17
+export const HEX_SHELVES: [number, number][] = [
+  [-1.03, 1.92],
+  [-0.76, 2.08],
+  [-0.76, 1.76],
+]
+
+function hexPath<T extends THREE.Path>(p: T, r: number) {
+  for (let i = 0; i <= 6; i++) {
+    const a = (i * Math.PI) / 3
+    if (i === 0) p.moveTo(Math.cos(a) * r, Math.sin(a) * r)
+    else p.lineTo(Math.cos(a) * r, Math.sin(a) * r)
+  }
+  return p
+}
+const hexFrameGeo = (() => {
+  const s = hexPath(new THREE.Shape(), HEX_R)
+  s.holes.push(hexPath(new THREE.Path(), HEX_R - 0.018))
+  return new THREE.ExtrudeGeometry(s, { depth: 0.16, bevelEnabled: true, bevelSize: 0.004, bevelThickness: 0.004, bevelSegments: 2 })
+})()
+const hexBackGeo = new THREE.ShapeGeometry(hexPath(new THREE.Shape(), HEX_R - 0.018))
 
 /** Static set dressing: walls, desk, riser, speakers, keyboard, wall art, chair. */
 export function Room() {
-  const poster = useCanvasTexture(256, 352, (c, w, h) => {
-    c.fillStyle = '#e9dcc4'
+  // own artwork: minimal sunset-over-hills print
+  const poster = useCanvasTexture(512, 704, (c, w, h) => {
+    c.fillStyle = '#efe4cf'
     c.fillRect(0, 0, w, h)
-    c.fillStyle = '#2f4a3a'
-    c.fillRect(14, 14, w - 28, h - 110)
-    // own artwork: a pixel moth over a sun
-    c.fillStyle = '#e8894a'
+    const ax = 36, ay = 36, aw = w - 72, ah = h - 210
+    const sky = c.createLinearGradient(0, ay, 0, ay + ah)
+    sky.addColorStop(0, '#2c3e4f')
+    sky.addColorStop(0.6, '#d9774a')
+    sky.addColorStop(1, '#f2b26b')
+    c.fillStyle = sky
+    c.fillRect(ax, ay, aw, ah)
+    c.fillStyle = '#ffe2a8'
     c.beginPath()
-    c.arc(w / 2, 120, 62, 0, Math.PI * 2)
+    c.arc(w / 2, ay + ah * 0.62, 70, 0, Math.PI * 2)
     c.fill()
-    c.fillStyle = '#f6e7d3'
-    for (const [x, y, s] of [[-3, 0, 1], [-2, -1, 1], [-2, 1, 1], [-1, 0, 2], [0, -1, 1], [0, 1, 1]] as const)
-      for (const side of [-1, 1]) c.fillRect(w / 2 + side * x * 14 - 7, 120 + y * 14 - 7, 14 * s, 14)
-    c.fillStyle = '#c0432a'
-    c.font = 'bold 48px Courier New'
+    const hills: [string, number, number][] = [['#7a3b2a', 0.68, 0.012], ['#4f3127', 0.78, 0.018], ['#2f4a3a', 0.88, 0.01]]
+    for (const [col, base, f] of hills) {
+      c.fillStyle = col
+      c.beginPath()
+      c.moveTo(ax, ay + ah)
+      for (let x = 0; x <= aw; x += 8) c.lineTo(ax + x, ay + ah * base - Math.sin(x * f + base * 9) * 34 - Math.sin(x * f * 2.7) * 14)
+      c.lineTo(ax + aw, ay + ah)
+      c.fill()
+    }
+    c.fillStyle = '#2a1c14'
     c.textAlign = 'center'
-    c.fillText('SAFE', w / 2, h - 52)
-    c.font = 'bold 26px Courier New'
-    c.fillText('PLACE · 2026', w / 2, h - 20)
+    c.font = 'bold 72px Georgia, serif'
+    c.fillText('SAFE PLACE', w / 2, h - 96)
+    c.font = '24px Courier New'
+    c.fillStyle = '#7a4a30'
+    c.fillText('— a room to build things in —', w / 2, h - 52)
   })
 
   const calendar = useCanvasTexture(160, 224, (c, w, h) => {
@@ -154,19 +189,23 @@ export function Room() {
         <meshStandardMaterial map={calendar} roughness={0.9} />
       </mesh>
 
-      {/* hex shelves */}
-      {(
-        [
-          [-1.08, 1.92],
-          [-0.76, 2.1],
-          [-0.76, 1.74],
-        ] as const
-      ).map(([x, y]) => (
-        <mesh key={`${x}${y}`} position={[x, y, -1.91]} rotation-x={Math.PI / 2}>
-          <cylinderGeometry args={[0.18, 0.18, 0.18, 6, 1, true]} />
-          <meshStandardMaterial color="#9a6440" side={2} roughness={0.9} />
-        </mesh>
+      {/* hex shelves: solid wooden frames with a darker back panel */}
+      {HEX_SHELVES.map(([x, y]) => (
+        <group key={`${x}${y}`} position={[x, y, -2]}>
+          <mesh geometry={hexFrameGeo}>
+            <meshStandardMaterial color="#ffffff" map={woodTexture('#b07a4f', '#7a4a2c')} roughness={0.6} />
+          </mesh>
+          <mesh geometry={hexBackGeo} position-z={0.004}>
+            <meshStandardMaterial color="#6e4630" roughness={0.9} />
+          </mesh>
+        </group>
       ))}
+
+      {/* rug (own kilim-style pattern) */}
+      <mesh rotation-x={-Math.PI / 2} rotation-z={0.04} position={[0.4, 0.004, -0.95]} userData={{ noShadow: true }} receiveShadow>
+        <planeGeometry args={[2.0, 1.35]} />
+        <meshStandardMaterial map={rugTexture()} roughness={1} alphaTest={0.5} />
+      </mesh>
 
       {/* polaroid column on the right wall */}
       {Array.from({ length: 6 }, (_, i) => {
@@ -181,16 +220,31 @@ export function Room() {
         )
       })}
 
-      {/* office chair, turned toward the viewer */}
-      <group position={[1.12, 0, -0.9]} rotation-y={-0.8}>
+      {/* office chair, turned three-quarters toward the viewer */}
+      <group position={[1.18, 0, -0.9]} rotation-y={-0.95} scale={0.92}>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <group key={i} rotation-y={(i * Math.PI * 2) / 5}>
+            <Box size={[0.035, 0.03, 0.27]} position={[0, 0.065, 0.135]} color="#1c1c1c" metalness={0.6} roughness={0.35} />
+            <mesh position={[0, 0.025, 0.26]}>
+              <sphereGeometry args={[0.024, 12, 8]} />
+              <meshStandardMaterial color="#111" roughness={0.3} />
+            </mesh>
+          </group>
+        ))}
         <mesh position={[0, 0.25, 0]}>
-          <cylinderGeometry args={[0.025, 0.025, 0.42, 8]} />
-          <meshStandardMaterial color="#222" />
+          <cylinderGeometry args={[0.022, 0.03, 0.36, 12]} />
+          <meshStandardMaterial color="#888" metalness={0.9} roughness={0.25} />
         </mesh>
-        <Box size={[0.5, 0.025, 0.06]} position={[0, 0.04, 0]} color="#222" />
-        <Box size={[0.06, 0.025, 0.5]} position={[0, 0.04, 0]} color="#222" />
-        <Box size={[0.46, 0.07, 0.44]} position={[0, 0.47, 0]} color="#4a2e22" roughness={0.45} />
-        <Box size={[0.44, 0.48, 0.06]} position={[0, 0.76, 0.22]} rotation-x={-0.1} color="#4a2e22" roughness={0.45} />
+        <Box size={[0.5, 0.09, 0.48]} radius={0.04} position={[0, 0.47, 0]} color={LEATHER} roughness={0.4} />
+        <Box size={[0.46, 0.58, 0.08]} radius={0.04} position={[0, 0.83, 0.22]} rotation-x={-0.12} color={LEATHER} roughness={0.4} />
+        <Box size={[0.3, 0.14, 0.07]} radius={0.03} position={[0, 1.2, 0.27]} rotation-x={-0.12} color={LEATHER} roughness={0.4} />
+        <Box size={[0.38, 0.03, 0.02]} position={[0, 1.09, 0.255]} rotation-x={-0.12} color="#1c1c1c" />
+        {[-1, 1].map((s) => (
+          <group key={s}>
+            <Box size={[0.03, 0.18, 0.03]} position={[s * 0.25, 0.58, 0.04]} color="#1c1c1c" />
+            <Box size={[0.07, 0.035, 0.26]} radius={0.015} position={[s * 0.25, 0.68, 0.02]} color="#1c1c1c" roughness={0.5} />
+          </group>
+        ))}
       </group>
     </group>
   )

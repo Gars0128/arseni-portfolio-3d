@@ -33,7 +33,6 @@ export default function App() {
         ) : (
           <span className="hint">hover the computer · drag to look around</span>
         )}
-        <a href="?lite">2D version</a>
       </div>
     </>
   )

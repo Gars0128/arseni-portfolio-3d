@@ -2,7 +2,7 @@
 
 A cozy 3D room built with React Three Fiber. Walk around the desk, click the monitor, and the camera flies into a small "OS" that holds my projects.
 
-**▶ Live:** https://gars0128.github.io/safeplace/ · **2D version:** https://gars0128.github.io/safeplace/?lite
+**▶ Live:** https://gars0128.github.io/safeplace/
 
 Things to try: hover the monitor, click the lamp, the PC, the cat; hover the pegboard; type `help` in the terminal.
 

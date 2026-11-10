@@ -21,7 +21,7 @@ Interactive cozy 3D room (React Three Fiber). Clicking the main monitor flies th
 - `src/scene/CameraRig.tsx`: room ↔ monitor camera, limits, parallax.
 - `src/scene/objects/Monitor.tsx`: `SCREEN` constant drives both the camera target and the `<Html>` size.
 - Look = soft PCSS shadows from the lamp, Lightformer environment, SSAO + bloom + ACES tone mapping (`effects/Post.tsx`), procedural canvas textures (`textures.ts`). N8AO crashes on three r187, do not re-add it.
-- `?lite` or no WebGL → `src/lite/LitePage.tsx`.
+- No WebGL → `src/lite/LitePage.tsx` (fallback only, no UI link).
 
 ## Deploy
 Push to `main` → `.github/workflows/deploy.yml` → GitHub Pages. Repo Settings → Pages → Source must be "GitHub Actions".

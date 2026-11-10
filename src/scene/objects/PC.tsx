@@ -1,18 +1,18 @@
 import { useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import * as THREE from 'three'
 import { Box, Interactive } from '../util'
 
 /** Glass-front tower on the floor: spinning fans + slowly cycling RGB. */
 export function PC() {
   const fans = useRef<THREE.Group[]>([])
-  const rgb = useRef<THREE.MeshStandardMaterial>(null)
+  const [rgb] = useState(() => new THREE.MeshStandardMaterial({ color: '#111', emissive: '#ff00aa', emissiveIntensity: 3 }))
   const boost = useRef(1)
 
   useFrame(({ clock }, dt) => {
     boost.current = THREE.MathUtils.lerp(boost.current, 1, dt)
     fans.current.forEach((f) => (f.rotation.z -= dt * 9 * boost.current))
-    rgb.current?.emissive.setHSL((clock.elapsedTime * 0.05) % 1, 0.8, 0.5)
+    rgb.emissive.setHSL((clock.elapsedTime * 0.05) % 1, 0.8, 0.5)
   })
 
   return (
@@ -32,13 +32,16 @@ export function PC() {
           {[0, 1, 2, 3].map((b) => (
             <Box key={b} size={[0.1, 0.03, 0.005]} rotation-z={(b * Math.PI) / 2 + 0.3} position={[0, 0, 0.01]} color="#333" />
           ))}
-          <mesh rotation-x={Math.PI / 2}>
-            <torusGeometry args={[0.055, 0.006, 6, 24]} />
-            <meshStandardMaterial ref={i === 0 ? rgb : undefined} color="#111" emissive="#ff00aa" emissiveIntensity={2.5} />
+          <mesh material={rgb}>
+            <torusGeometry args={[0.058, 0.006, 8, 32]} />
           </mesh>
         </group>
       ))}
-      <Box size={[0.16, 0.04, 0.12]} position={[0, -0.06, -0.1]} color="#2a2a2a" />
+      {/* GPU with a light strip */}
+      <Box size={[0.16, 0.04, 0.2]} position={[0.02, -0.06, -0.08]} color="#2a2a2a" metalness={0.5} roughness={0.4} />
+      <mesh position={[0.02, -0.038, -0.08]} material={rgb}>
+        <boxGeometry args={[0.14, 0.004, 0.01]} />
+      </mesh>
     </Interactive>
   )
 }

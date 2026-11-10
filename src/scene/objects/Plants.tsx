@@ -60,12 +60,12 @@ export function Plants() {
   return (
     <>
       <Plant position={[-1.48, 2.05, -1.55]} seed={11} hanging leaves={70} />
-      <Plant position={[1.25, 2.0, -0.95]} seed={4} hanging leaves={55} potColor="#c9a67a" />
+      <Plant position={[1.36, 2.05, 0.15]} seed={4} hanging leaves={55} potColor="#c9a67a" />
       <Plant position={[1.48, 1.99, -1.55]} seed={8} leaves={40} spread={0.1} potColor="#2f4a3a" />
       {/* plants in the hex shelves */}
-      <Plant position={[-1.08, 1.89, -1.91]} seed={2} leaves={18} spread={0.06} potColor="#e9dcc4" />
-      <Plant position={[-0.76, 2.07, -1.91]} seed={5} leaves={18} spread={0.06} potColor="#7a4a30" />
-      <Plant position={[-0.76, 1.71, -1.91]} seed={9} leaves={16} spread={0.06} />
+      <Plant position={[-1.03, 1.863, -1.92]} seed={2} leaves={18} spread={0.06} potColor="#e9dcc4" />
+      <Plant position={[-0.76, 2.023, -1.92]} seed={5} leaves={18} spread={0.06} potColor="#7a4a30" />
+      <Plant position={[-0.76, 1.703, -1.92]} seed={9} leaves={16} spread={0.06} />
       {/* desk plant */}
       <Plant position={[0.16, 0.94, -1.86]} seed={6} leaves={14} spread={0.045} potColor="#c0432a" />
     </>
