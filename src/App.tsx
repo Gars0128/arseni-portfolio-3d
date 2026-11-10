@@ -1,10 +1,10 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useEffect } from 'react'
 import { Experience } from './scene/Experience'
-import { useStore } from './store'
+import { LED_COLORS, useStore } from './store'
 
 export default function App() {
-  const { mode, setMode, loaded } = useStore()
+  const { mode, setMode, loaded, night, toggleNight, led, setLed } = useStore()
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setMode('room')
@@ -14,7 +14,7 @@ export default function App() {
 
   return (
     <>
-      <Canvas className="scene" dpr={[1, 2]} shadows camera={{ fov: 45, near: 0.05, far: 40, position: [-0.55, 1.55, 1.35] }}>
+      <Canvas className="scene" dpr={[1, 2]} shadows camera={{ fov: 45, near: 0.05, far: 40, position: [-0.85, 1.7, 1.45] }}>
         <Suspense fallback={null}>
           <Experience />
         </Suspense>
@@ -27,6 +27,25 @@ export default function App() {
           <button onClick={() => setMode('room')}>← Back to room</button>
         ) : (
           <span className="hint">hover the computer · drag to look around</span>
+        )}
+        {mode === 'room' && (
+          <div className="controls">
+            <div className="swatches" role="group" aria-label="LED colour">
+              {LED_COLORS.map((c) => (
+                <button
+                  key={c}
+                  className={c === led ? 'swatch on' : 'swatch'}
+                  style={{ background: c === 'rainbow' ? 'conic-gradient(red, yellow, lime, cyan, blue, magenta, red)' : c }}
+                  onClick={() => setLed(c)}
+                  aria-label={c === 'rainbow' ? 'Rainbow LED' : `LED ${c}`}
+                  aria-pressed={c === led}
+                />
+              ))}
+            </div>
+            <button className="daynight" onClick={toggleNight} aria-label={night ? 'Switch to day' : 'Switch to night'}>
+              {night ? '☀ day' : '☾ night'}
+            </button>
+          </div>
         )}
       </div>
     </>

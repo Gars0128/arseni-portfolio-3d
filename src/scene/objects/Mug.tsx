@@ -55,16 +55,21 @@ export function Mug() {
   return (
     <group position={[1.15, 0.76, -1.42]}>
       <mesh position-y={0.045}>
-        <cylinderGeometry args={[0.038, 0.034, 0.09, 24]} />
-        <meshStandardMaterial color="#b0603a" roughness={0.35} />
+        <cylinderGeometry args={[0.038, 0.034, 0.09, 32, 1, true]} />
+        <meshStandardMaterial color="#b0603a" roughness={0.35} side={THREE.DoubleSide} />
       </mesh>
       <mesh position={[0.042, 0.05, 0]}>
         <torusGeometry args={[0.02, 0.006, 8, 16]} />
         <meshStandardMaterial color="#b0603a" roughness={0.35} />
       </mesh>
-      <mesh position-y={0.084} rotation-x={-Math.PI / 2}>
-        <circleGeometry args={[0.034, 24]} />
-        <meshStandardMaterial color="#2a160c" roughness={0.1} />
+      {/* open mug: base + coffee surface a little below the rim */}
+      <mesh position-y={0.002} rotation-x={-Math.PI / 2}>
+        <circleGeometry args={[0.034, 32]} />
+        <meshStandardMaterial color="#b0603a" roughness={0.35} />
+      </mesh>
+      <mesh position-y={0.074} rotation-x={-Math.PI / 2}>
+        <circleGeometry args={[0.0368, 32]} />
+        <meshStandardMaterial color="#3a1f10" roughness={0.12} />
       </mesh>
       <mesh position-y={0.002}>
         <cylinderGeometry args={[0.055, 0.055, 0.004, 24]} />

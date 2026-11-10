@@ -31,3 +31,16 @@ body { overflow: hidden; }
 .hud button:focus-visible, .hud a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .hint { opacity: 0.75; margin-right: auto; }
 .hud button:first-child { margin-right: auto; }
+
+.controls {
+  display: flex; align-items: center; gap: 10px; padding: 6px 8px;
+  background: #1a120ecc; border: 1px solid #ffffff22; border-radius: 999px; backdrop-filter: blur(8px);
+}
+.swatches { display: flex; gap: 6px; }
+.hud .swatch {
+  width: 20px; height: 20px; padding: 0; border-radius: 50%; border: 2px solid #ffffff55;
+  transition: transform 0.15s, border-color 0.15s;
+}
+.hud .swatch:hover { transform: scale(1.15); background-blend-mode: normal; }
+.hud .swatch.on { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 10px #ffffff66; }
+.hud .daynight { border-radius: 999px; border-width: 1px; }

@@ -61,7 +61,7 @@ export function Plants() {
     <>
       <Plant position={[-1.25, 2.05, -1.6]} seed={11} hanging leaves={70} />
       {/* windowsill */}
-      <Plant position={[2.9, 0.92, -1.9]} seed={8} leaves={34} spread={0.09} potColor="#d8cbb5" />
+      <Plant position={[1.53, 0.97, -0.72]} seed={8} leaves={34} spread={0.09} potColor="#d8cbb5" />
     </>
   )
 }

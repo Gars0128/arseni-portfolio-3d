@@ -58,14 +58,15 @@ export function SideMonitor() {
   const tex = useTerminalTexture()
 
   return (
-    <group position={[-0.2, 1.2, -1.68]} rotation-y={0.38}>
+    <group position={[-0.33, 1.2, -1.7]} rotation-y={0.32}>
       <Box size={[0.36, 0.62, 0.025]} color="#151515" />
       <mesh position-z={0.0135}>
         <planeGeometry args={[0.34, 0.6]} />
         <meshBasicMaterial map={tex} toneMapped={false} />
       </mesh>
       {/* silver stand */}
-      <Box size={[0.06, 0.3, 0.025]} position={[0, -0.24, -0.04]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
+      <Box size={[0.14, 0.2, 0.02]} position={[0, 0, -0.022]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
+      <Box size={[0.06, 0.38, 0.025]} position={[0, -0.22, -0.042]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
       <Box size={[0.24, 0.012, 0.19]} position={[0, -0.434, -0.01]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
     </group>
   )

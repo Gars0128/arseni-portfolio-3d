@@ -25,3 +25,8 @@ Interactive cozy 3D room (React Three Fiber). Clicking the main monitor flies th
 
 ## Deploy
 Push to `main` → `.github/workflows/deploy.yml` → GitHub Pages. Repo Settings → Pages → Source must be "GitHub Actions".
+
+## Local-only course assets
+- `public/room/` (git-ignored) holds course assets. Only `topChairModel.glb` + `bakedDay/Night.jpg` are used (`objects/AssetChair.tsx`); when they are absent (CI, public deploy) the procedural `objects/Chair.tsx` renders instead. Never commit `public/room/`.
+- `public/draco/` is three's MIT Draco decoder, needed to load that chair.
+- Day/night: `store.night` → `dayMix` (objects/Lights.tsx) drives every light, the window sky, sunbeam and the LED arc. LED palette: `LED_COLORS` in store.ts.
