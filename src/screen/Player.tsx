@@ -1,5 +1,7 @@
 import { TRACK, useMusic } from '../music'
 
+const SPOTIFY_EMBED = 'https://open.spotify.com/embed/track/3X7wz6EBdQbey8PIrSHXuP?utm_source=generator&theme=0'
+
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
 
 /** Spotify-style player window. */
@@ -41,7 +43,14 @@ export function Player() {
             </div>
           </>
         ) : (
-          <p className="player-off">Track not available in this build.</p>
+          // public build has no local file: official Spotify embed (licensed playback) instead
+          <iframe
+            className="player-spotify"
+            title={`${TRACK.title} — ${TRACK.artist} on Spotify`}
+            src={SPOTIFY_EMBED}
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          />
         )}
       </div>
     </div>

@@ -1,5 +1,10 @@
 node_modules
 dist
-# local-only, not licensed for publishing
-public/room
+# course assets: only the chair goes live (owner's decision); everything else stays local
+public/room/*
+!public/room/topChairModel.glb
+!public/room/roomModel.glb
+!public/room/bakedDay.jpg
+!public/room/bakedNight.jpg
+# commercial track: never published (public build uses the Spotify embed)
 public/music
