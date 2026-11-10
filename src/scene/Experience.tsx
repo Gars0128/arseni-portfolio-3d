@@ -15,6 +15,7 @@ import { Mug } from './objects/Mug'
 import { PC } from './objects/PC'
 import { Plants } from './objects/Plants'
 import { SideMonitor } from './objects/SideMonitor'
+import { SpeakerAudio } from './objects/SpeakerAudio'
 import { Window } from './objects/Window'
 import { swayTime } from './shaders/sway'
 import { Loaded } from './util'
@@ -61,6 +62,7 @@ export function Experience() {
       <Plants />
       <Mug />
       <Cat />
+      <SpeakerAudio />
 
       <CameraRig view={VIEW} />
       <Loaded />

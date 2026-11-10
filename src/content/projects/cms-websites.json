@@ -1,0 +1,25 @@
+{
+  "slug": "cms-websites",
+  "title": "CMS-Driven Websites & Components",
+  "category": "fullstack",
+  "year": 2025,
+  "role": "Full-stack engineer (agency, client work)",
+  "summary": "Editor-friendly websites where content lives in a CMS, not in code.",
+  "problem": "Marketing teams needed to change pages, media and forms without a developer for every edit.",
+  "solution": "Integrated headless-CMS content into React interfaces, built reusable WordPress block components and responsive layouts, and responsive HTML emails that render in Gmail and Outlook.",
+  "result": "Content, media and forms are managed by editors, with cross-device QA on every component.",
+  "stack": [
+    "React",
+    "TypeScript",
+    "Strapi",
+    "WordPress/Gutenberg",
+    "HubSpot",
+    "HTML email"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": true
+}

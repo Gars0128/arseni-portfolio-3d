@@ -6,13 +6,13 @@ import { Box, Interactive } from '../util'
 /** Glass-front tower on the floor: spinning fans + slowly cycling RGB. */
 export function PC() {
   const fans = useRef<THREE.Group[]>([])
-  const [rgb] = useState(() => new THREE.MeshStandardMaterial({ color: '#111', emissive: '#2bff7a', emissiveIntensity: 3 }))
+  const [rgb] = useState(() => new THREE.MeshStandardMaterial({ color: '#111', emissive: '#2a7dff', emissiveIntensity: 3 }))
   const boost = useRef(1)
 
   useFrame(({ clock }, dt) => {
     boost.current = THREE.MathUtils.lerp(boost.current, 1, dt)
     fans.current.forEach((f) => (f.rotation.z -= dt * 9 * boost.current))
-    // green like the real build, gently breathing
+    // blue, like the reference room PC glow; gently breathing
     rgb.emissiveIntensity = 2.4 + Math.sin(clock.elapsedTime * 1.2) * 0.8
   })
 

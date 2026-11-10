@@ -21,6 +21,7 @@ export const projectSchema = z
     problem: z.string().min(1),
     solution: z.string().min(1),
     result: z.string().min(1),
+    highlights: z.array(z.string()).default([]),
     stack: z.array(z.string()).min(1),
     links: z.object({ github: z.url().nullable(), demo: z.url().nullable() }),
     media: z.array(z.string()).default([]),

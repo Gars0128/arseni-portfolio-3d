@@ -2,16 +2,18 @@
   "slug": "personal-finance-etl",
   "title": "Personal Finance ETL",
   "category": "fullstack",
-  "year": 2025,
-  "role": "Solo",
-  "summary": "Pipeline that pulls bank exports into one clean ledger.",
-  "problem": "Statements from different banks come in different, messy formats.",
-  "solution": "A parser per source, then normalization and categorization into one database with dashboards.",
-  "result": "One place to see spending across all accounts.",
+  "year": 2026,
+  "role": "Personal project",
+  "summary": "Bank CSVs in, one clean ledger and monthly reports out — safe to re-run any time.",
+  "problem": "Bank exports are messy, overlap between imports and mix internal transfers with real spending.",
+  "solution": "Layered .NET CLI (Domain / Application / Infrastructure) with SQLite: canonical CSV mapping, stable transaction hashing for idempotent re-imports, transfer reconciliation, rule-based categories, recurring detection and Google Sheets sync.",
+  "result": "Re-importing never duplicates data; core logic validated by 43 automated tests on synthetic fixtures.",
   "stack": [
-    "Python",
-    "SQL",
-    "pandas"
+    ".NET",
+    "C#",
+    "SQLite",
+    "CsvHelper",
+    "Google Sheets API"
   ],
   "links": {
     "github": null,

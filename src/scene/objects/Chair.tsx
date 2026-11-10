@@ -57,6 +57,41 @@ function drapeGeometry(width: number, length: number, flat: number, seed: number
   return g
 }
 
+/** Five-star base with casters, gas lift and the tilt mechanism; its top is at y = 0.42. */
+export function ChairBase() {
+  return (
+    <>
+      {/* five-star base with twin-wheel casters */}
+      {/* gaming-chair proportions: 0.66 m star, sturdy tapered legs, twin-wheel casters */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <group key={i} rotation-y={(i * Math.PI * 2) / 5}>
+          <mesh material={PLASTIC} position={[0, 0.09, 0.17]} rotation-x={Math.PI / 2 - 0.1}>
+            <cylinderGeometry args={[0.022, 0.032, 0.34, 12]} />
+          </mesh>
+          <mesh material={PLASTIC} position={[0, 0.06, 0.33]}>
+            <boxGeometry args={[0.03, 0.03, 0.04]} />
+          </mesh>
+          <mesh material={PLASTIC} position={[0, 0.035, 0.335]} rotation-z={Math.PI / 2}>
+            <cylinderGeometry args={[0.035, 0.035, 0.045, 18]} />
+          </mesh>
+        </group>
+      ))}
+      <mesh material={PLASTIC} position-y={0.1}>
+        <cylinderGeometry args={[0.055, 0.065, 0.06, 20]} />
+      </mesh>
+      <mesh material={PLASTIC} position-y={0.21}>
+        <cylinderGeometry args={[0.04, 0.045, 0.18, 20]} />
+      </mesh>
+      <mesh material={CHROME} position-y={0.33}>
+        <cylinderGeometry args={[0.024, 0.024, 0.08, 16]} />
+      </mesh>
+      <mesh material={PLASTIC} position-y={0.395}>
+        <boxGeometry args={[0.26, 0.05, 0.24]} />
+      </mesh>
+    </>
+  )
+}
+
 /** Office chair after the real one: tall curved back, soft cushion, tube armrests, two blankets. */
 export function Chair(props: { position: [number, number, number]; rotation: number }) {
   const geo = useMemo(
@@ -88,26 +123,7 @@ export function Chair(props: { position: [number, number, number]; rotation: num
 
   return (
     <group position={props.position} rotation-y={props.rotation}>
-      {/* five-star base with twin-wheel casters */}
-      {[0, 1, 2, 3, 4].map((i) => (
-        <group key={i} rotation-y={(i * Math.PI * 2) / 5}>
-          <mesh material={PLASTIC} position={[0, 0.075, 0.15]} rotation-x={Math.PI / 2 - 0.12}>
-            <cylinderGeometry args={[0.014, 0.022, 0.3, 10]} />
-          </mesh>
-          <mesh material={PLASTIC} position={[0, 0.03, 0.29]} rotation-z={Math.PI / 2}>
-            <cylinderGeometry args={[0.028, 0.028, 0.03, 16]} />
-          </mesh>
-        </group>
-      ))}
-      <mesh material={CHROME} position-y={0.26}>
-        <cylinderGeometry args={[0.02, 0.02, 0.3, 16]} />
-      </mesh>
-      <mesh material={PLASTIC} position-y={0.17}>
-        <cylinderGeometry args={[0.032, 0.036, 0.16, 16]} />
-      </mesh>
-      <mesh material={PLASTIC} position-y={0.405}>
-        <boxGeometry args={[0.22, 0.03, 0.2]} />
-      </mesh>
+      <ChairBase />
       <mesh geometry={geo.seat} material={FABRIC} position-y={0.465} />
       {/* back + spine */}
       <mesh material={PLASTIC} position={[0, 0.55, 0.21]} rotation-x={-0.1}>

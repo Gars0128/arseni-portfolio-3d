@@ -1,0 +1,24 @@
+{
+  "slug": "crm-forms-compliance",
+  "title": "CRM Forms & Compliance-Aware Tracking",
+  "category": "automation",
+  "year": 2026,
+  "role": "Full-stack engineer (agency, client work)",
+  "summary": "Made marketing forms behave the same everywhere — and tracking respect each market's rules.",
+  "problem": "Form logic was scattered through site templates, success states were hidden, and tracking ignored per-market consent rules.",
+  "solution": "Refactored form HTML/JavaScript into components, standardised validation, consent and legal rows, disabled open/click tracking where required and adjusted segmentation; supported containerised deployments and environment diagnostics.",
+  "result": "Consistent validation and consent messaging across forms, with tracking that matches compliance requirements.",
+  "stack": [
+    "JavaScript",
+    "HTML/CSS",
+    "Marketing automation CRM",
+    "Docker",
+    "WordPress"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": true
+}

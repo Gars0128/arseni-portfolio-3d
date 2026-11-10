@@ -7,9 +7,9 @@ import { dayMix } from './Lights'
 
 // Arc LED standing behind the main monitor, ends resting on the desk.
 const CENTER = new THREE.Vector3(0.5, 0.77, -1.965)
-// stays within the monitor width (0.68 m); tall enough to rise above the monitor top
+// stays within the monitor width (0.68 m); hidden behind the monitor except its legs
 const R = 0.3
-const SQUASH = 2.45
+const SQUASH = 1.7 // top stays below the monitor top: only the legs show
 
 /** Elliptical arch as a tube: constant thickness, uv.x runs along the strip (used by the rainbow). */
 const arcGeometries = new Map<number, THREE.TubeGeometry>()

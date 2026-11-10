@@ -1,0 +1,31 @@
+{
+  "slug": "checkin-copilot",
+  "title": "Human-in-the-Loop Check-in Copilot",
+  "category": "ai",
+  "year": 2026,
+  "featured": true,
+  "role": "Solo — workflow design, prompts, testing",
+  "summary": "Turns free-text weekly check-ins into structured, evidence-backed decisions — with a human approving every risky route.",
+  "problem": "Keyword rules misread real messages, but handing routing to an LLM alone is unsafe for sensitive text.",
+  "solution": "A 23-node n8n workflow: webhook → guardrails (PII redaction, prompt-injection blocking) → local LLM extraction into schema-validated JSON with verbatim evidence → deterministic routing rules → human approval through a paused Wait node → audit trail.",
+  "result": "On realistic messages keyword rules alone misrouted 5 of 8 — the case for LLM extraction, with deterministic rules keeping the final decision. Runs on a local model, so sensitive text never leaves the machine.",
+  "highlights": [
+    "Tested end to end on six scenarios",
+    "Every extracted field must quote the message verbatim",
+    "Approval pause and full execution history as the audit log"
+  ],
+  "stack": [
+    "n8n",
+    "Ollama",
+    "LLM extraction",
+    "JSON Schema",
+    "JavaScript",
+    "Webhooks"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": false
+}

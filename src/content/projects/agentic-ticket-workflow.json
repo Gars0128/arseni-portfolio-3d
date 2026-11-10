@@ -5,16 +5,26 @@
   "year": 2026,
   "featured": true,
   "role": "Solo — design & implementation",
-  "summary": "Support-ticket agent where business rules have the final say.",
-  "problem": "LLM agents happily take actions that break refund limits, SLAs and escalation policy.",
-  "solution": "A durable Temporal workflow: the LLM proposes, deterministic rule checks approve or reject, risky actions wait for a human.",
-  "result": "Every decision is replayable and auditable; policy violations are blocked in code, not in the prompt.",
+  "summary": "An LLM agent that resolves support tickets — where business rules, not the model, have the final word.",
+  "problem": "LLM agents happily take actions that break refund limits and policy, retry into duplicate side effects and trust whatever the ticket text says.",
+  "solution": "A durable Temporal workflow: the agent decides via tool calling, Python rules check the decision, risky actions wait for a human, then the system acts — with retries that never repeat a side effect.",
+  "result": "Guardrails are enforced in code and covered by tests in CI; compared a frontier model with a local 4B model on the same scenarios.",
+  "highlights": [
+    "Ticket text treated as untrusted input; tools scoped to the ticket's own customer",
+    "Tool-loop limit and deterministic rules with final authority",
+    "Refunds only after explicit human approval",
+    "pytest suite and GitHub Actions CI for the guardrails"
+  ],
   "stack": [
     "Python",
     "FastAPI",
     "Temporal",
     "Anthropic SDK",
-    "pytest"
+    "Tool calling",
+    "Ollama",
+    "Docker",
+    "pytest",
+    "GitHub Actions"
   ],
   "links": {
     "github": "https://github.com/Gars0128/Agentic-Ticket-Workflow",

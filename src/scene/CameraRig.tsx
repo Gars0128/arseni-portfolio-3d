@@ -23,6 +23,8 @@ const deg = Math.PI / 180
 export function CameraRig({ view }: { view: View }) {
   const ref = useRef<CameraControls>(null)
   const mode = useStore((s) => s.mode)
+  // until the scene has loaded: wide establishing shot; then the camera flies in by itself
+  const loaded = useStore((s) => s.loaded)
   const camera = useThree((s) => s.camera) as PerspectiveCamera
   const baseAzimuth = Math.atan2(view.pos[0] - view.target[0], view.pos[2] - view.target[2])
 
@@ -34,9 +36,12 @@ export function CameraRig({ view }: { view: View }) {
   useEffect(() => {
     const c = ref.current!
     const [x, y, z] = view.screen
-    if (mode === 'monitor') c.setLookAt(x, y, z + view.monitorDistance, x, y, z, true)
+    if (!loaded) {
+      const [px, py, pz] = view.pos, [tx, ty, tz] = view.target
+      c.setLookAt(tx + (px - tx) * 1.9, ty + (py - ty) * 1.9 + 0.6, tz + (pz - tz) * 1.9, tx, ty, tz, false)
+    } else if (mode === 'monitor') c.setLookAt(x, y, z + view.monitorDistance, x, y, z, true)
     else c.setLookAt(...view.pos, ...view.target, true)
-  }, [mode, view])
+  }, [mode, view, loaded])
 
   // Idle parallax: drift the view slightly toward the mouse.
   useFrame(({ pointer }) => {
@@ -48,10 +53,10 @@ export function CameraRig({ view }: { view: View }) {
     <CameraControls
       ref={ref}
       makeDefault
-      enabled={mode === 'room'}
-      smoothTime={0.45}
+      enabled={mode === 'room' && loaded}
       minDistance={mode === 'room' ? view.minDistance : 0.1}
-      maxDistance={view.maxDistance}
+      smoothTime={0.6}
+      maxDistance={loaded ? view.maxDistance : view.maxDistance * 2}
       minAzimuthAngle={baseAzimuth - view.azimuthRange * deg}
       maxAzimuthAngle={baseAzimuth + view.azimuthRange * deg}
       minPolarAngle={view.polar[0] * deg}

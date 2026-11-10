@@ -1,0 +1,22 @@
+{
+  "slug": "persona-ux-research",
+  "title": "Persona-Based UX Research",
+  "category": "automation",
+  "year": 2026,
+  "role": "Independent experiment",
+  "summary": "Simulated user interviews that found real accessibility bugs.",
+  "problem": "Small sites rarely get user research, so serious UX issues ship unnoticed.",
+  "solution": "A local research workflow with a custom UX adapter and graph storage organising persona responses and page observations into a prioritised backlog.",
+  "result": "42 screenshots, 24 persona responses and 8 one-on-one sessions produced a 9-item backlog — including a critical bug where reduced-motion settings hid 5 core sections.",
+  "stack": [
+    "Local UX adapter",
+    "Kuzu graph DB",
+    "LLM personas"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": false
+}

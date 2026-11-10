@@ -20,14 +20,51 @@ function skyTexture(day: boolean) {
     g.addColorStop(0.7, '#cfe2f6')
     g.addColorStop(1, '#f4f1e6')
   } else {
-    g.addColorStop(0, '#0b1230')
-    g.addColorStop(0.6, '#26345e')
-    g.addColorStop(0.92, '#6a5a78')
-    g.addColorStop(1, '#c48a6a')
+    g.addColorStop(0, '#070b1c')
+    g.addColorStop(0.55, '#121c3a')
+    g.addColorStop(0.85, '#24304f')
+    g.addColorStop(1, '#3d3a4a')
   }
   c.fillStyle = g
   c.fillRect(0, 0, 128, 256)
   const r = rand(day ? 2 : 3)
+  if (!day) {
+    // night is drawn at 4× so stars stay pin-sharp; city silhouette with a few lit windows at the bottom
+    el.width = 512
+    el.height = 1024
+    c.scale(4, 4)
+    c.fillStyle = g
+    c.fillRect(0, 0, 128, 256)
+    for (let i = 0; i < 90; i++) {
+      c.fillStyle = `rgba(255,255,255,${0.15 + r() * 0.6})`
+      const s = 0.25 + r() * 0.35
+      c.fillRect(r() * 128, r() * 190, s, s)
+    }
+    const moon = c.createRadialGradient(96, 46, 2, 96, 46, 16)
+    moon.addColorStop(0, '#fffbe8')
+    moon.addColorStop(0.3, '#f4efd8')
+    moon.addColorStop(0.32, '#f4efd833')
+    moon.addColorStop(1, '#f4efd800')
+    c.fillStyle = moon
+    c.fillRect(70, 20, 52, 52)
+    let x = 0
+    while (x < 128) {
+      const w = 10 + r() * 18, h = 18 + r() * 40
+      c.fillStyle = '#0c1020'
+      c.fillRect(x, 256 - h, w, h)
+      for (let wy = 256 - h + 3; wy < 252; wy += 5)
+        for (let wx = x + 2; wx < x + w - 2; wx += 4) if (r() > 0.82) {
+          c.fillStyle = r() > 0.5 ? '#ffcf7a' : '#ffe6b0'
+          c.fillRect(wx, wy, 1.4, 1.8)
+        }
+      x += w + 1
+    }
+    const glow = c.createLinearGradient(0, 180, 0, 256)
+    glow.addColorStop(0, '#ff9a5a00')
+    glow.addColorStop(1, '#ff9a5a22')
+    c.fillStyle = glow
+    c.fillRect(0, 180, 128, 76)
+  }
   if (day) {
     // soft clouds
     for (let i = 0; i < 9; i++) {
@@ -38,15 +75,6 @@ function skyTexture(day: boolean) {
       c.fillStyle = cg
       c.fillRect(0, 0, 128, 256)
     }
-  } else {
-    for (let i = 0; i < 70; i++) {
-      c.fillStyle = `rgba(255,255,255,${0.3 + r() * 0.7})`
-      c.fillRect(r() * 128, r() * 170, 1, 1)
-    }
-    c.fillStyle = '#f4f0dc'
-    c.beginPath()
-    c.arc(92, 52, 9, 0, Math.PI * 2)
-    c.fill()
   }
   const t = new THREE.CanvasTexture(el)
   t.colorSpace = THREE.SRGBColorSpace

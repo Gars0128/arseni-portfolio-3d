@@ -1,22 +1,24 @@
 {
   "slug": "ai-website-auditor",
-  "title": "AI Website Auditor",
-  "category": "automation",
+  "title": "AI-Assisted Website Auditor",
+  "category": "ai",
   "year": 2025,
-  "role": "Developer (agency)",
-  "summary": "Automated website audit with an LLM-written report.",
-  "problem": "Manual site audits were slow and inconsistent.",
-  "solution": "A crawler collects SEO, performance and content signals; an LLM turns them into a prioritized report.",
-  "result": "Audits in minutes instead of hours.",
+  "role": "Independent prototype",
+  "summary": "Crawls a site like a real browser and explains what's wrong in plain language.",
+  "problem": "Manual website audits are slow, inconsistent and hard to turn into a fix list.",
+  "solution": "An asynchronous auditing workflow: rendered-page inspection, responsive screenshots, accessibility and performance diagnostics, and LLM-written explanations with structured response validation and fallbacks for malformed output.",
+  "result": "Repeatable audits that end in an exportable report and a structured backlog of fixes.",
   "stack": [
     "Python",
-    "LLM",
-    "Lighthouse"
+    "FastAPI",
+    "React",
+    "Playwright",
+    "LLM APIs"
   ],
   "links": {
     "github": null,
     "demo": null
   },
   "media": [],
-  "nda": true
+  "nda": false
 }

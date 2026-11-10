@@ -1,0 +1,23 @@
+{
+  "slug": "visual-template-editor",
+  "title": "Visual Template Editor",
+  "category": "fullstack",
+  "year": 2026,
+  "role": "Full-stack engineer (agency, client work)",
+  "summary": "A visual editor for complex subscription-platform templates that never breaks the code underneath.",
+  "problem": "Templates mix HTML, CSS, JavaScript, dynamic placeholders and platform scripts — any manual edit could break checkout behaviour.",
+  "solution": "React/TypeScript editor with visual and code modes, a content-fields panel, desktop/mobile previews, a template library and import/export round-trips that preserve placeholders and platform-specific scripts.",
+  "result": "Complex templates (countdown modals, themed offers) can be adjusted visually and saved back as drafts without hand-editing markup.",
+  "stack": [
+    "React",
+    "TypeScript",
+    "HTML/CSS/JS",
+    "REST API"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": true
+}

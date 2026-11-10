@@ -15,7 +15,7 @@ export function run(cmd: string): { out: string; open?: string; clear?: boolean 
     return p ? { out: `opening ${p.title}…`, open: p.slug } : { out: `no such project: ${arg || '?'} (try ls projects)` }
   }
   if (name === 'whoami') return { out: `${site.name}: ${site.tagline}` }
-  if (name === 'cv') return { out: `CV on request: ${site.links.map((l) => l.url).join(', ')}` }
+  if (name === 'cv') return { out: 'opening CV…', open: 'cv' }
   if (name === 'clear') return { out: '', clear: true }
   if (cmd.trim() === 'sudo coffee') return { out: '☕ brewing… permission granted. The cat approves.' }
   if (name === 'sudo') return { out: 'nice try.' }

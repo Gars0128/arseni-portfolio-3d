@@ -20,7 +20,7 @@ export function Post() {
       />
       <Outline blur edgeStrength={3} visibleEdgeColor={0xfff0d8} hiddenEdgeColor={0xfff0d8} />
       <Bloom mipmapBlur luminanceThreshold={0.95} luminanceSmoothing={0.3} intensity={0.8} />
-      <ToneMapping mode={ToneMappingMode.AGX} />
+      <ToneMapping mode={ToneMappingMode.NEUTRAL} />
       <SMAA />
       <Vignette offset={0.35} darkness={0.45} />
     </EffectComposer>

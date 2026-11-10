@@ -1,0 +1,27 @@
+{
+  "slug": "enterprise-presentation-platform",
+  "title": "Enterprise Presentation Processing Platform",
+  "category": "fullstack",
+  "year": 2025,
+  "featured": true,
+  "role": "Full-stack engineer (agency, client work)",
+  "summary": "Backend for uploading, processing and co-editing large corporate slide decks for a global financial-services client.",
+  "problem": "Heavy PowerPoint processing blocked user requests, parallel editors overwrote each other, and database schemas drifted between environments.",
+  "solution": "C#/ASP.NET Core features with EF Core/MySQL; long-running document work moved to background jobs and queues; PowerPoint document integration; SignalR-based edit locking; roles, permissions and email workflows.",
+  "result": "Processing no longer blocks users, concurrent editing is coordinated in real time, and migrations stay consistent across environments.",
+  "stack": [
+    "C#",
+    "ASP.NET Core",
+    "EF Core",
+    "MySQL",
+    "SignalR",
+    "Background jobs",
+    "PPTX processing"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": true
+}

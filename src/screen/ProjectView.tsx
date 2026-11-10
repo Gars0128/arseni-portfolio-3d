@@ -20,6 +20,16 @@ export function ProjectView({ slug }: { slug: string }) {
       <p>{p.solution}</p>
       <h3>Result</h3>
       <p>{p.result}</p>
+      {p.highlights.length > 0 && (
+        <>
+          <h3>Highlights</h3>
+          <ul className="highlights">
+            {p.highlights.map((h) => (
+              <li key={h}>{h}</li>
+            ))}
+          </ul>
+        </>
+      )}
       {/* media loads lazily: only when the project window is open */}
       {p.media.map((m) => (
         <img key={m} loading="lazy" src={`${import.meta.env.BASE_URL}projects/${p.slug}/${m}`} alt={`${p.title} screenshot`} />

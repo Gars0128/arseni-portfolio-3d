@@ -1,0 +1,25 @@
+{
+  "slug": "offline-exhibition-demos",
+  "title": "Offline Exhibition Demos",
+  "category": "3d",
+  "year": 2025,
+  "role": "Full-stack engineer (agency, client work)",
+  "summary": "Large-format interactive demos for industrial and aviation clients that run with zero network.",
+  "problem": "Show floors have unreliable Wi-Fi, but the demo has to look perfect all day on large displays.",
+  "solution": "Electron/Chromium apps combining CMS-sourced content with locally packaged media and 3D/WebGL visuals; investigated Windows GPU, Chromium and video-playback compatibility.",
+  "result": "Self-contained builds that run on show-floor hardware without depending on the venue network.",
+  "stack": [
+    "Electron",
+    "Chromium",
+    "Three.js",
+    "WebGL",
+    "React",
+    "Windows"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": true
+}

@@ -22,7 +22,7 @@ export const useStore = create<State>((set) => ({
   // shareable deep link straight into the monitor: /#monitor
   mode: location.hash === '#monitor' ? 'monitor' : 'room',
   night: true,
-  led: '#ff6700',
+  led: '#ff115e',
   loaded: false,
   setMode: (mode) => set({ mode }),
   toggleNight: () => set((s) => ({ night: !s.night })),

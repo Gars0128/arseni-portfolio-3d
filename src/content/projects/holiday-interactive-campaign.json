@@ -1,0 +1,23 @@
+{
+  "slug": "holiday-interactive-campaign",
+  "title": "Holiday Interactive Campaign",
+  "category": "3d",
+  "year": 2024,
+  "role": "Front-end developer (agency)",
+  "summary": "A festive 3D mini-game landing page built on a marketing CMS.",
+  "problem": "A seasonal campaign needed something people would actually play and share, not another static page.",
+  "solution": "Interactive 3D scene, Lottie animations and responsive layout delivered inside the marketing CMS.",
+  "result": "A playable campaign page that works across devices.",
+  "stack": [
+    "Three.js",
+    "Lottie",
+    "Tailwind CSS",
+    "HubSpot CMS"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": true
+}

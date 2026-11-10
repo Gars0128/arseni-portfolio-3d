@@ -4,7 +4,7 @@ import { ScreenSaver } from '../../screen/ScreenSaver'
 import { useStore } from '../../store'
 import { Box, Interactive } from '../util'
 
-export const SCREEN = { position: [0.5, 1.25, -1.8] as const, w: 0.68, h: 0.385 }
+export const SCREEN = { position: [0.5, 1.13, -1.8] as const, w: 0.68, h: 0.385 }
 const CSS_WIDTH = 1280
 
 /** The HTML mini-OS (or the project screensaver) mapped onto a w×h world-space screen facing +z. */
@@ -41,8 +41,8 @@ export function Monitor() {
           </mesh>
           {/* silver stand */}
           <Box size={[0.2, 0.14, 0.02]} position={[0, 0, -0.022]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
-          <Box size={[0.06, 0.4, 0.025]} position={[0, -0.28, -0.042]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
-          <Box size={[0.25, 0.012, 0.19]} position={[0, -0.484, -0.01]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
+          <Box size={[0.06, 0.3, 0.025]} position={[0, -0.22, -0.042]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
+          <Box size={[0.25, 0.012, 0.19]} position={[0, -0.364, -0.01]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
           <ScreenHtml w={SCREEN.w} h={SCREEN.h} hovered={hovered} />
         </group>
       )}

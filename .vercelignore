@@ -1,0 +1,5 @@
+node_modules
+dist
+# local-only, not licensed for publishing
+public/room
+public/music

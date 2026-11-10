@@ -1,0 +1,32 @@
+{
+  "slug": "multiscreen-interactive-demo",
+  "title": "Synchronized Multi-Screen Interactive Demo",
+  "category": "3d",
+  "year": 2026,
+  "featured": true,
+  "role": "Full-stack engineer (agency, client work)",
+  "summary": "A touch table, a 4K wall and a handheld controller telling one story in perfect sync for a global cloud provider.",
+  "problem": "Three machines and an Android input device had to stay in lockstep — video loops drifted, transitions raced and some media fell back to slow software decoding.",
+  "solution": "React/TypeScript apps where the touch table owns the authoritative state and the 4K screen mirrors it; coordinated video loops, cancellable transitions and interactive charts; re-encoded media into hardware-friendly formats; Windows kiosk delivery.",
+  "result": "Designed a 12-hour Playwright endurance run — 107 cycles, 2,461 automated actions — that surfaced race conditions and decoding bottlenecks and shaped the playback fixes.",
+  "highlights": [
+    "Fixed controller-to-chart input by replaying pointer events in the right order",
+    "Diagnosed 4:4:4 video forcing software decoding; switched to 4:2:0",
+    "Split a 42 MB audio track out of a 363 MB video"
+  ],
+  "stack": [
+    "React",
+    "TypeScript",
+    "Highcharts",
+    "Playwright",
+    "Electron",
+    "Chrome kiosk",
+    "Android"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": true
+}

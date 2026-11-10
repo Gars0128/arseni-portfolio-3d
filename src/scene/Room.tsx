@@ -1,8 +1,10 @@
-import { use, useMemo } from 'react'
+import { useFrame } from '@react-three/fiber'
+import { use, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { deskmatTexture, laminateTexture, plasterTexture, rugTexture, woodTexture } from './textures'
 import { AssetChair, chairAssetAvailable } from './objects/AssetChair'
 import { Chair } from './objects/Chair'
+import { beat } from './objects/SpeakerAudio'
 import { Box } from './util'
 
 const METAL = '#1e1e20'
@@ -65,6 +67,21 @@ function Cable({ points, radius = 0.004, color = '#151517' }: { points: [number,
   )
 }
 
+/** Speaker cone that pushes out with the bass of whatever is playing. */
+function Woofer() {
+  const ref = useRef<THREE.Mesh>(null)
+  useFrame(() => {
+    const s = 1 + beat.value * 0.08
+    ref.current!.scale.set(s, 1 + beat.value * 3, s)
+  })
+  return (
+    <mesh ref={ref} position={[0, -0.03, 0.101]} rotation-x={Math.PI / 2}>
+      <cylinderGeometry args={[0.058, 0.058, 0.004, 32]} />
+      <meshStandardMaterial color="#2a2a2e" roughness={0.9} />
+    </mesh>
+  )
+}
+
 /** Static set dressing modelled on the real room: walls, floor, desk, desk items, chair. */
 export function Room() {
 
@@ -114,10 +131,7 @@ export function Room() {
       ).map(([x, z, ry]) => (
         <group key={x} position={[x, 0.76 + 0.13, z]} rotation-y={ry}>
           <Box size={[0.16, 0.26, 0.2]} radius={0.015} color="#141416" roughness={0.6} />
-          <mesh position={[0, -0.03, 0.101]} rotation-x={Math.PI / 2}>
-            <cylinderGeometry args={[0.058, 0.058, 0.004, 32]} />
-            <meshStandardMaterial color="#2a2a2e" roughness={0.9} />
-          </mesh>
+          <Woofer />
           <mesh position={[0, -0.03, 0.104]} rotation-x={Math.PI / 2}>
             <cylinderGeometry args={[0.022, 0.03, 0.006, 24]} />
             <meshStandardMaterial color="#555" metalness={0.6} roughness={0.3} />
@@ -163,7 +177,7 @@ export function Room() {
       </group>
 
       {/* headphones lying on the desk */}
-      <group position={[-0.28, 0.79, -1.4]} rotation={[Math.PI / 2 - 0.15, 0, 0.5]}>
+      <group position={[-0.28, 0.81, -1.4]} rotation={[Math.PI / 2 - 0.15, 0, 0.5]}>
         <mesh>
           <torusGeometry args={[0.085, 0.012, 10, 32, Math.PI]} />
           <meshStandardMaterial color="#18181a" roughness={0.5} />
@@ -188,7 +202,7 @@ export function Room() {
         <meshStandardMaterial map={rugTexture()} roughness={1} />
       </mesh>
 
-      {use(chairAssetAvailable) ? <AssetChair position={[1.15, 0, -1.18]} rotation={2.6} /> : <Chair position={[1.18, 0, -0.98]} rotation={2.05} />}
+      {use(chairAssetAvailable) ? <AssetChair position={[0.72, 0, -0.88]} rotation={4.885} /> : <Chair position={[0.9, 0, -0.95]} rotation={2.6} />}
 
       {/* cables: keyboard + mouse to the back edge, monitors down behind the desk, PC power to the wall socket */}
       <Cable points={[[0.5, 0.79, -1.525], [0.48, 0.775, -1.6], [0.42, 0.767, -1.75], [0.38, 0.767, -1.95]]} radius={0.003} color="#d8d6d0" />

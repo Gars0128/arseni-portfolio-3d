@@ -66,7 +66,7 @@ export function SideMonitor() {
       </mesh>
       {/* silver stand */}
       <Box size={[0.14, 0.2, 0.02]} position={[0, 0, -0.022]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
-      <Box size={[0.06, 0.38, 0.025]} position={[0, -0.22, -0.042]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
+      <Box size={[0.06, 0.42, 0.025]} position={[0, -0.22, -0.042]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
       <Box size={[0.24, 0.012, 0.19]} position={[0, -0.434, -0.01]} color="#c9c9cd" metalness={0.7} roughness={0.35} />
     </group>
   )

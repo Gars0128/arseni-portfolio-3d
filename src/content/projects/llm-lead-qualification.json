@@ -1,0 +1,30 @@
+{
+  "slug": "llm-lead-qualification",
+  "title": "LLM Lead-Qualification Pipeline",
+  "category": "automation",
+  "year": 2026,
+  "featured": true,
+  "role": "Automation engineer (agency, internal work)",
+  "summary": "Finds publishers, reads their paywall signals with an LLM and hands clean segments to the CRM — safely.",
+  "problem": "Prospect research was manual, and an automated pipeline that emails the wrong people is worse than none.",
+  "solution": "n8n workflows connect discovery and enrichment APIs, LLM classification of paywall and subscription signals, structured company records in Google Sheets and CRM segments.",
+  "result": "Research runs automatically while guarded execution keeps every campaign intentional.",
+  "highlights": [
+    "Test mode and per-run limits before go-live",
+    "Deduplication and output validation on every record",
+    "Segment-level controls on what is actually sent"
+  ],
+  "stack": [
+    "n8n",
+    "OpenAI API",
+    "Enrichment APIs",
+    "Google Sheets",
+    "CRM"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": true
+}
