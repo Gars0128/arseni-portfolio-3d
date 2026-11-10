@@ -1,0 +1,22 @@
+{
+  "slug": "citywheels-helpdesk-agent",
+  "title": "CityWheels Help-Desk Agent",
+  "category": "ai",
+  "year": 2026,
+  "role": "Solo",
+  "summary": "Customer-support agent for a fictional bike-sharing service.",
+  "problem": "Routine rider questions (billing, broken bikes, zones) eat support time.",
+  "solution": "Tool-using agent with a knowledge base and handoff to a human when unsure.",
+  "result": "Answers common questions end to end and escalates the rest with context.",
+  "stack": [
+    "Python",
+    "LLM tools",
+    "RAG"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": false
+}

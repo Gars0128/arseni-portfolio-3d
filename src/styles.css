@@ -1,0 +1,34 @@
+:root {
+  --bg: #1a100b;
+  --ink: #f6e7d3;
+  --accent: #e8894a;
+  --green: #4f6b4a;
+  font-family: 'Courier New', ui-monospace, monospace;
+  color: var(--ink);
+  background: var(--bg);
+}
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; height: 100%; }
+body { overflow: hidden; }
+.scene { position: fixed !important; inset: 0; }
+.scene.pixel canvas { image-rendering: pixelated; }
+
+.boot {
+  position: fixed; inset: 0; display: grid; place-items: center;
+  background: var(--bg); color: var(--accent); font-size: 18px; letter-spacing: 2px;
+  transition: opacity 0.8s 0.3s; z-index: 10;
+}
+.boot.done { opacity: 0; pointer-events: none; }
+
+.hud {
+  position: fixed; left: 16px; right: 16px; bottom: 16px; display: flex; gap: 8px;
+  align-items: center; flex-wrap: wrap; z-index: 5; font-size: 13px;
+}
+.hud button, .hud a {
+  font: inherit; color: var(--ink); background: #2b1a12cc; border: 2px solid var(--accent);
+  padding: 6px 10px; cursor: pointer; text-decoration: none;
+}
+.hud button:hover, .hud a:hover { background: var(--accent); color: var(--bg); }
+.hud button:focus-visible, .hud a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.hint { opacity: 0.75; margin-right: auto; }
+.hud button:first-child { margin-right: auto; }

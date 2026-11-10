@@ -1,0 +1,22 @@
+{
+  "slug": "paywall-template-editor",
+  "title": "Visual Paywall Editor",
+  "category": "fullstack",
+  "year": 2025,
+  "role": "Front-end developer (agency)",
+  "summary": "Drag-and-drop editor for mobile paywall templates.",
+  "problem": "Every paywall experiment needed a developer and an app release.",
+  "solution": "A visual editor that outputs templates the apps render remotely.",
+  "result": "Marketing ships paywall variants without code.",
+  "stack": [
+    "React",
+    "TypeScript",
+    "Canvas"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": true
+}

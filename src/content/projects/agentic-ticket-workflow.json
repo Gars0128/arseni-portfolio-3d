@@ -1,0 +1,25 @@
+{
+  "slug": "agentic-ticket-workflow",
+  "title": "Agentic Ticket Workflow",
+  "category": "ai",
+  "year": 2026,
+  "featured": true,
+  "role": "Solo — design & implementation",
+  "summary": "Support-ticket agent where business rules have the final say.",
+  "problem": "LLM agents happily take actions that break refund limits, SLAs and escalation policy.",
+  "solution": "A durable Temporal workflow: the LLM proposes, deterministic rule checks approve or reject, risky actions wait for a human.",
+  "result": "Every decision is replayable and auditable; policy violations are blocked in code, not in the prompt.",
+  "stack": [
+    "Python",
+    "FastAPI",
+    "Temporal",
+    "Anthropic SDK",
+    "pytest"
+  ],
+  "links": {
+    "github": "https://github.com/Gars0128/Agentic-Ticket-Workflow",
+    "demo": null
+  },
+  "media": [],
+  "nda": false
+}

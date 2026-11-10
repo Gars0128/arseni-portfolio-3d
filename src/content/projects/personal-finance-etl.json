@@ -1,0 +1,22 @@
+{
+  "slug": "personal-finance-etl",
+  "title": "Personal Finance ETL",
+  "category": "fullstack",
+  "year": 2025,
+  "role": "Solo",
+  "summary": "Pipeline that pulls bank exports into one clean ledger.",
+  "problem": "Statements from different banks come in different, messy formats.",
+  "solution": "A parser per source, then normalization and categorization into one database with dashboards.",
+  "result": "One place to see spending across all accounts.",
+  "stack": [
+    "Python",
+    "SQL",
+    "pandas"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": false
+}

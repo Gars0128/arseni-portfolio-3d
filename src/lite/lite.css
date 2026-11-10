@@ -1,0 +1,8 @@
+body:has(.lite) { overflow: auto; background: #f3eadb; }
+.lite { max-width: 820px; margin: 0 auto; padding: 32px 16px 64px; color: #2a1c14; font: 17px/1.55 'Courier New', monospace; }
+.lite h1 { color: #b4532a; font-size: 40px; margin: 0; }
+.lite h2 { border-bottom: 3px solid #2a1c14; margin-top: 36px; }
+.lite a { color: #b4532a; font-weight: bold; }
+.lite details { border: 2px solid #2a1c14; background: #fff8ee; margin: 10px 0; padding: 10px 14px; }
+.lite summary { cursor: pointer; }
+.lite .project h3 { font-size: 17px; }

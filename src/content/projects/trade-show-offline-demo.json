@@ -1,0 +1,22 @@
+{
+  "slug": "trade-show-offline-demo",
+  "title": "Offline Trade-show Demo",
+  "category": "3d",
+  "year": 2024,
+  "role": "3D developer (agency)",
+  "summary": "Interactive 3D demo for a telecom company's trade-show booth.",
+  "problem": "Booth Wi-Fi is unreliable, but the demo has to run all day.",
+  "solution": "Three.js app packaged with Electron: fully offline, kiosk mode.",
+  "result": "Ran at trade shows without a network.",
+  "stack": [
+    "Three.js",
+    "Electron",
+    "TypeScript"
+  ],
+  "links": {
+    "github": null,
+    "demo": null
+  },
+  "media": [],
+  "nda": true
+}

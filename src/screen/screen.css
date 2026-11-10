@@ -1,0 +1,68 @@
+.os {
+  overflow: hidden;
+  background: radial-gradient(ellipse at 30% 20%, #3b5a4a, #1d2a2a 70%);
+  color: #f3eadb;
+  font: 20px/1.45 'Courier New', monospace;
+  border-radius: 4px;
+  user-select: text;
+}
+.desktop { position: relative; height: 100%; }
+.desktop button { font: inherit; color: inherit; cursor: pointer; }
+
+.icons { position: absolute; top: 24px; left: 24px; display: grid; grid-template-columns: repeat(2, 130px); gap: 18px; }
+.icon {
+  background: none; border: 2px solid transparent; padding: 8px 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 16px !important;
+}
+.icon:hover, .icon:focus-visible { border-color: #e8894a; background: #e8894a22; outline: none; }
+.glyph { font-size: 40px; line-height: 1; }
+
+.wallpaper-note { position: absolute; right: 48px; top: 60px; width: 520px; text-align: right; }
+.wallpaper-note h1 { font-size: 64px; margin: 0; color: #e8894a; letter-spacing: 3px; }
+.muted { opacity: 0.6; font-size: 16px; }
+
+.window {
+  position: absolute; left: 330px; top: 28px; right: 28px; bottom: 76px;
+  background: #f3eadb; color: #2a1c14; border: 3px solid #2a1c14; box-shadow: 8px 8px 0 #0006;
+  display: flex; flex-direction: column; animation: pop 0.18s ease-out;
+}
+@keyframes pop { from { transform: scale(0.96); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .window { animation: none; } }
+.window header {
+  display: flex; gap: 10px; align-items: center; padding: 6px 10px;
+  background: #e8894a; color: #2a1c14; font-weight: bold; text-transform: capitalize;
+}
+.window header span { flex: 1; }
+.window header button { background: #f3eadb; border: 2px solid #2a1c14; padding: 0 10px; }
+.window .body { overflow: auto; padding: 18px 26px; flex: 1; }
+
+.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.list button {
+  width: 100%; text-align: left; background: #fff8ee; border: 2px solid #2a1c14; padding: 10px 14px;
+  display: grid; gap: 2px;
+}
+.list button:hover, .list button:focus-visible { background: #ffe2c4; outline: none; }
+.list span { font-size: 17px; opacity: 0.8; }
+.nda { font-size: 14px; background: #2a1c14; color: #f3eadb; padding: 0 6px; font-style: normal; justify-self: start; }
+
+.project h3 { margin: 16px 0 2px; color: #b4532a; font-size: 20px; }
+.project p { margin: 4px 0; }
+.project .meta { opacity: 0.75; font-size: 17px; }
+.project .summary { font-weight: bold; }
+.project img { max-width: 100%; border: 2px solid #2a1c14; margin-top: 12px; }
+.stack { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.stack span { background: #4f6b4a; color: #f3eadb; padding: 0 8px; font-size: 15px; }
+.links { display: flex; gap: 18px; margin-top: 16px !important; }
+.window a { color: #b4532a; font-weight: bold; }
+
+.terminal { background: #10161c; color: #c9d4dc; margin: -18px -26px; padding: 14px 18px; min-height: calc(100% + 36px); }
+.terminal pre { margin: 0; white-space: pre-wrap; font: inherit; }
+.terminal form { display: flex; gap: 8px; color: #e8894a; }
+.terminal input { flex: 1; background: none; border: 0; color: inherit; font: inherit; outline: none; }
+
+.taskbar {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 52px; display: flex; gap: 10px; align-items: center;
+  padding: 0 14px; background: #2a1c14ee; border-top: 2px solid #e8894a; font-size: 17px;
+}
+.taskbar button { background: #3b2a1f; border: 2px solid #e8894a; padding: 2px 12px; }
+.taskbar .spacer { flex: 1; }
