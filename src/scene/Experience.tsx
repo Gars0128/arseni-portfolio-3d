@@ -13,6 +13,7 @@ import { Lights } from './objects/Lights'
 import { Monitor, SCREEN } from './objects/Monitor'
 import { Mug } from './objects/Mug'
 import { PC } from './objects/PC'
+import { Props } from './objects/Props'
 import { Robot } from './objects/Robot'
 import { Plants } from './objects/Plants'
 import { SideMonitor } from './objects/SideMonitor'
@@ -65,6 +66,7 @@ export function Experience() {
       <Cat />
       <SpeakerAudio />
       <Robot />
+      <Props />
 
       <CameraRig view={VIEW} />
       <Loaded />
